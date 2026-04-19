@@ -1,6 +1,7 @@
 package com.skhu.skhucapstone.clubmember.domain;
 
 import com.skhu.skhucapstone.club.domain.Club;
+import com.skhu.skhucapstone.user.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -51,22 +52,20 @@ public class ClubMember {
     @JoinColumn(name = "club_id", nullable = false)
     private Club club;
 
-
-    @Column(name = "user_id", nullable = false)
-    private Long userId; //아직 유저 엔티티가 없음
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Builder
-    public ClubMember(Club club, Long userId, ClubRole role) {
+    public ClubMember(Club club, User user, ClubRole role) {
         this.club = club;
-        this.userId = userId;
+        this.user = user;
         this.role = role;
         this.clubJoinStatus = ClubJoinStatus.JOINED;
         this.joinedAt = LocalDateTime.now();
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
-
 
     public void changeRole(ClubRole role) {
         this.role = role;
