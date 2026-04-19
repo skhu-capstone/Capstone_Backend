@@ -1,8 +1,7 @@
 package com.skhu.skhucapstone.user.respository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.security.core.userdetails.User;
-
+import com.skhu.skhucapstone.user.entity.User;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
