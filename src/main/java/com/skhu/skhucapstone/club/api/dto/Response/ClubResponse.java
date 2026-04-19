@@ -17,7 +17,7 @@ public record ClubResponse(
                 club.getId(),
                 club.getClubName(),
                 club.getDescription(),
-                club.getIsApproved(),
+                club.isApproved(),
                 club.getCreatedAt(),
                 club.getUpdatedAt()
         );
