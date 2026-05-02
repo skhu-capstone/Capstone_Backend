@@ -30,7 +30,7 @@ public class ClubService {
     }
 
     public List<ClubResponse> getClubs() {
-        return clubRepository.findAll()
+        return clubRepository.findByApprovedTrue()
                 .stream()
                 .map(ClubResponse::from)
                 .toList();
@@ -38,7 +38,7 @@ public class ClubService {
 
     public ClubResponse getClub(Long clubId) {
         Club club = clubRepository.findById(clubId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 동아리입니다."));
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 동아리를 찾을 수 없습니다. clubId = " + clubId));
 
         return ClubResponse.from(club);
     }
