@@ -28,7 +28,13 @@ public class User {
 
     private String schoolEmail;
 
+    @Builder.Default
     @ColumnDefault("false") // 기본값이 false, @DynamicInsert를 같이 써야함
     @Column(nullable = false)
-    private Boolean isVerified;
+    private Boolean isVerified = false;
+
+    public void verifySchoolEmail(String schoolEmail) {
+        this.schoolEmail = schoolEmail;
+        this.isVerified = true;
+    }
 }
