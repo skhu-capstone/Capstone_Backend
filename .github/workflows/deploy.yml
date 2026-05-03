@@ -34,15 +34,15 @@ jobs:
       - name: Set up configuration files
         run: |
           mkdir -p ./src/main/resources
-          cat > ./src/main/resources/application.yml <<'EOF'
-          ${{ secrets.APPLICATION_YML }}
-          EOF
-          cat > ./src/main/resources/application-dev.yml <<'EOF'
-          ${{ secrets.APPLICATION_DEV_YML }}
-          EOF
-          cat > ./src/main/resources/application-prod.yml <<'EOF'
-          ${{ secrets.APPLICATION_PROD_YML }}
-          EOF
+          cat > ./src/main/resources/application.yml << 'EOF'
+${{ secrets.APPLICATION_YML }}
+EOF
+          cat > ./src/main/resources/application-dev.yml << 'EOF'
+${{ secrets.APPLICATION_DEV_YML }}
+EOF
+          cat > ./src/main/resources/application-prod.yml << 'EOF'
+${{ secrets.APPLICATION_PROD_YML }}
+EOF
 
       - name: Verify config files exist
         run: ls -l ./src/main/resources/application*.yml
