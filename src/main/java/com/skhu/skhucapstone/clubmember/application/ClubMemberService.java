@@ -2,8 +2,8 @@ package com.skhu.skhucapstone.clubmember.application;
 
 import com.skhu.skhucapstone.club.domain.Club;
 import com.skhu.skhucapstone.club.domain.repository.ClubRepository;
-import com.skhu.skhucapstone.clubmember.api.dto.request.ClubMemberRegisterRequest;
-import com.skhu.skhucapstone.clubmember.api.dto.response.ClubMemberRegisterResponse;
+import com.skhu.skhucapstone.clubmember.api.dto.request.ClubMemberRequest;
+import com.skhu.skhucapstone.clubmember.api.dto.response.ClubMemberResponse;
 import com.skhu.skhucapstone.clubmember.domain.ClubJoinStatus;
 import com.skhu.skhucapstone.clubmember.domain.ClubMember;
 import com.skhu.skhucapstone.clubmember.domain.repository.ClubMemberRepository;
@@ -25,13 +25,13 @@ public class ClubMemberService {
     private final ClubMemberRepository clubMemberRepository;
 
     @Transactional
-    public ClubMemberRegisterResponse registerMembers(Long clubId, ClubMemberRegisterRequest request) {
+    public ClubMemberResponse registerMembers(Long clubId, ClubMemberRequest request) {
         Club club = clubRepository.findById(clubId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 동아리를 찾을 수 없습니다. clubId = " + clubId));
 
         int registeredCount = 0;
 
-        for (ClubMemberRegisterRequest.MemberInfo memberInfo : request.members()) {
+        for (ClubMemberRequest.MemberInfo memberInfo : request.members()) {
             User user = userRepository.findById(memberInfo.userId())
                     .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다. userId = " + memberInfo.userId()));
 
@@ -49,7 +49,7 @@ public class ClubMemberService {
             registeredCount++;
         }
 
-        return new ClubMemberRegisterResponse(
+        return new ClubMemberResponse(
                 clubId,
                 registeredCount,
                 ClubJoinStatus.JOINED,

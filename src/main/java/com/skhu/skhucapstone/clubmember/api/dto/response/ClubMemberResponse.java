@@ -4,7 +4,7 @@ import com.skhu.skhucapstone.clubmember.domain.ClubJoinStatus;
 
 import java.time.LocalDateTime;
 
-public record ClubMemberRegisterResponse(
+public record ClubMemberResponse(
         Long clubId,
         int registeredCount,
         ClubJoinStatus clubJoinStatus,
