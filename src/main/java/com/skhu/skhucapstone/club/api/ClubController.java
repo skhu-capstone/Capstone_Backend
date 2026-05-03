@@ -30,4 +30,14 @@ public class ClubController {
     public ClubResponse getClub(@PathVariable Long clubId) {
         return clubService.getClub(clubId);
     }
+
+    @PatchMapping("/{clubId}/approve")
+    public ClubResponse approveClub(@PathVariable Long clubId) {
+        return clubService.approveClub(clubId);
+    }
+
+    @PatchMapping("/{clubId}/reject")
+    public ClubResponse rejectClub(@PathVariable Long clubId) {
+        return clubService.rejectClub(clubId);
+    }
 }
