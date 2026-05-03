@@ -16,7 +16,7 @@ public class AdminClubController {
     private final ClubService clubService;
 
     @GetMapping
-    public List<ClubResponse> getPendingClubs() {
-        return clubService.getPendingClubs();
+    public List<ClubResponse> getUnapprovedClubs() {
+        return clubService.getUnapprovedClubs();
     }
 }
