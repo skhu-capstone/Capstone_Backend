@@ -48,7 +48,11 @@ jobs:
         run: ls -l ./src/main/resources/application*.yml
 
       - name: Print prod yml (debug)
-        run: cat ./src/main/resources/application-prod.yml
+        run: |
+          echo "파일 크기:"
+          wc -l ./src/main/resources/application-prod.yml
+          echo "spring.datasource.url 존재 여부:"
+          grep -c "datasource" ./src/main/resources/application-prod.yml || echo "datasource 없음"
 
       - name: Build with Gradle
         run: ./gradlew clean build --no-daemon --warning-mode=all -x test
