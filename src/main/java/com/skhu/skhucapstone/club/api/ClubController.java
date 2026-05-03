@@ -3,6 +3,7 @@ package com.skhu.skhucapstone.club.api;
 import com.skhu.skhucapstone.club.api.dto.Request.ClubCreateRequest;
 import com.skhu.skhucapstone.club.api.dto.Response.ClubResponse;
 import com.skhu.skhucapstone.club.application.ClubService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +17,7 @@ public class ClubController {
     private final ClubService clubService;
 
     @PostMapping
-    public ClubResponse createClub(@RequestBody ClubCreateRequest request) {
+    public ClubResponse createClub(@Valid @RequestBody ClubCreateRequest request) {
         return clubService.createClub(request);
     }
 

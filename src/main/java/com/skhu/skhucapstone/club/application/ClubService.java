@@ -21,7 +21,13 @@ public class ClubService {
     public ClubResponse createClub(ClubCreateRequest request) {
         Club club = Club.builder()
                 .clubName(request.clubName())
-                .description(request.description())
+                .category(request.category())
+                .shortDescription(request.shortDescription())
+                .detailDescription(request.detailDescription())
+                .imageUrl(request.imageUrl())
+                .regularMeetingTime(request.regularMeetingTime())
+                .activityLocation(request.activityLocation())
+                .contact(request.contact())
                 .build();
 
         Club savedClub = clubRepository.save(club);

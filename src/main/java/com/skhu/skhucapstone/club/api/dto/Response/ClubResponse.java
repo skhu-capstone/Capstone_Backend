@@ -7,7 +7,13 @@ import java.time.LocalDateTime;
 public record ClubResponse(
         Long id,
         String clubName,
-        String description,
+        String category,
+        String shortDescription,
+        String detailDescription,
+        String imageUrl,
+        String regularMeetingTime,
+        String activityLocation,
+        String contact,
         Boolean isApproved,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
@@ -16,7 +22,13 @@ public record ClubResponse(
         return new ClubResponse(
                 club.getId(),
                 club.getClubName(),
-                club.getDescription(),
+                club.getCategory(),
+                club.getShortDescription(),
+                club.getDetailDescription(),
+                club.getImageUrl(),
+                club.getRegularMeetingTime(),
+                club.getActivityLocation(),
+                club.getContact(),
                 club.isApproved(),
                 club.getCreatedAt(),
                 club.getUpdatedAt()

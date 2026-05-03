@@ -1,11 +1,6 @@
 package com.skhu.skhucapstone.club.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,8 +22,26 @@ public class Club {
     @Column(name = "club_name", nullable = false, length = 100)
     private String clubName;
 
-    @Column(name = "description", nullable = false, columnDefinition = "TEXT")
-    private String description;
+    @Column(name = "category", nullable = false, length = 50)
+    private String category;
+
+    @Column(name = "short_description", nullable = false, length = 255)
+    private String shortDescription;
+
+    @Column(name = "detail_description", nullable = false, columnDefinition = "TEXT")
+    private String detailDescription;
+
+    @Column(name = "image_url", length = 1000)
+    private String imageUrl;
+
+    @Column(name = "regular_meeting_time", nullable = false, length = 100)
+    private String regularMeetingTime;
+
+    @Column(name = "activity_location", nullable = false, length = 255)
+    private String activityLocation;
+
+    @Column(name = "contact", nullable = false, length = 100)
+    private String contact;
 
     @Column(name = "is_approved", nullable = false)
     private boolean isApproved;
@@ -40,9 +53,24 @@ public class Club {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Club(String clubName, String description) {
+    public Club(
+            String clubName,
+            String category,
+            String shortDescription,
+            String detailDescription,
+            String imageUrl,
+            String regularMeetingTime,
+            String activityLocation,
+            String contact
+    ) {
         this.clubName = clubName;
-        this.description = description;
+        this.category = category;
+        this.shortDescription = shortDescription;
+        this.detailDescription = detailDescription;
+        this.imageUrl = imageUrl;
+        this.regularMeetingTime = regularMeetingTime;
+        this.activityLocation = activityLocation;
+        this.contact = contact;
         this.isApproved = false;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
@@ -58,9 +86,24 @@ public class Club {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public void updateInfo(String clubName, String description) {
+    public void updateInfo(
+            String clubName,
+            String category,
+            String shortDescription,
+            String detailDescription,
+            String imageUrl,
+            String regularMeetingTime,
+            String activityLocation,
+            String contact
+    ) {
         this.clubName = clubName;
-        this.description = description;
+        this.category = category;
+        this.shortDescription = shortDescription;
+        this.detailDescription = detailDescription;
+        this.imageUrl = imageUrl;
+        this.regularMeetingTime = regularMeetingTime;
+        this.activityLocation = activityLocation;
+        this.contact = contact;
         this.updatedAt = LocalDateTime.now();
     }
 }
