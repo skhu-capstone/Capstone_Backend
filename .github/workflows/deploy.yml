@@ -98,7 +98,8 @@ jobs:
             echo "[2/5] Stop & remove existing container (if exists)"
             if sudo docker ps -a --format '{{.Names}}' | grep -wq "$NAME"; then
               sudo docker stop "$NAME" || true
-              sudo docker rm "$NAME" || true
+              sudo docker wait "$NAME" || true
+              sudo docker rm -f "$NAME" || true
             fi
 
             echo "[3/5] Run new container on port ${PORT}"
