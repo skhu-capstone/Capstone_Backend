@@ -44,7 +44,7 @@ public class Club {
     private String contact;
 
     @Column(name = "is_approved", nullable = false)
-    private boolean isApproved;
+    private boolean approved;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
@@ -71,18 +71,18 @@ public class Club {
         this.regularMeetingTime = regularMeetingTime;
         this.activityLocation = activityLocation;
         this.contact = contact;
-        this.isApproved = false;
+        this.approved = false;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
 
     public void approve() {
-        this.isApproved = true;
+        this.approved = true;
         this.updatedAt = LocalDateTime.now();
     }
 
     public void reject() {
-        this.isApproved = false;
+        this.approved = false;
         this.updatedAt = LocalDateTime.now();
     }
 
