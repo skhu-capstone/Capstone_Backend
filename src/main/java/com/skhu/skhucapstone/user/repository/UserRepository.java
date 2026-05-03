@@ -1,4 +1,4 @@
-package com.skhu.skhucapstone.user.respository;
+package com.skhu.skhucapstone.user.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.skhu.skhucapstone.user.entity.User;

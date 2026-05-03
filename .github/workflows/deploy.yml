@@ -34,18 +34,19 @@ jobs:
       - name: Set up configuration files
         run: |
           mkdir -p ./src/main/resources
-          cat > ./src/main/resources/application.yml <<'EOF'
-          ${{ secrets.APPLICATION_YML }}
-          EOF
-          cat > ./src/main/resources/application-dev.yml <<'EOF'
-          ${{ secrets.APPLICATION_DEV_YML }}
-          EOF
-          cat > ./src/main/resources/application-prod.yml <<'EOF'
-          ${{ secrets.APPLICATION_PROD_YML }}
-          EOF
+          echo "${{ secrets.APPLICATION_YML }}" > ./src/main/resources/application.yml
+          echo "${{ secrets.APPLICATION_DEV_YML }}" > ./src/main/resources/application-dev.yml
+          echo "${{ secrets.APPLICATION_PROD_YML }}" > ./src/main/resources/application-prod.yml
 
       - name: Verify config files exist
         run: ls -l ./src/main/resources/application*.yml
+
+      - name: Print prod yml (debug)
+        run: |
+          echo "파일 크기:"
+          wc -l ./src/main/resources/application-prod.yml
+          echo "spring.datasource.url 존재 여부:"
+          grep -c "datasource" ./src/main/resources/application-prod.yml || echo "datasource 없음"
 
       - name: Build with Gradle
         run: ./gradlew clean build --no-daemon --warning-mode=all -x test
@@ -98,7 +99,8 @@ jobs:
             echo "[2/5] Stop & remove existing container (if exists)"
             if sudo docker ps -a --format '{{.Names}}' | grep -wq "$NAME"; then
               sudo docker stop "$NAME" || true
-              sudo docker rm "$NAME" || true
+              sudo docker wait "$NAME" || true
+              sudo docker rm -f "$NAME" || true
             fi
 
             echo "[3/5] Run new container on port ${PORT}"
