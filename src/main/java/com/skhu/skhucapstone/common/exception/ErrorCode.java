@@ -26,7 +26,15 @@ public enum ErrorCode {
 
     // 공통
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "UNAUTHORIZED", "로그인이 필요합니다."),
-    INVALID_REQUEST(HttpStatus.BAD_REQUEST, "INVALID_REQUEST", "올바르지 않은 요청입니다.");
+    INVALID_REQUEST(HttpStatus.BAD_REQUEST, "INVALID_REQUEST", "올바르지 않은 요청입니다."),
+
+    // 커피챗
+    COFFEECHAT_PROFILE_NOT_FOUND(HttpStatus.NOT_FOUND, "COFFEECHAT_PROFILE_NOT_FOUND", "커피챗 프로필을 찾을 수 없습니다."),
+    INVALID_COFFEECHAT_PROFILE_REQUEST(HttpStatus.BAD_REQUEST, "INVALID_COFFEECHAT_PROFILE_REQUEST", "커피챗 프로필 요청 형식이 올바르지 않습니다."),
+    COFFEECHAT_PROFILE_PRIVATE(HttpStatus.FORBIDDEN, "COFFEECHAT_PROFILE_PRIVATE", "비공개 커피챗 프로필입니다."),
+
+    // 유저
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER_NOT_FOUND", "유저를 찾을 수 없습니다.");
 
     private final HttpStatus status;
     private final String code;
