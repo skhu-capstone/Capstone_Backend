@@ -6,14 +6,17 @@ import com.skhu.skhucapstone.clubmember.api.dto.request.ClubMemberRequest;
 import com.skhu.skhucapstone.clubmember.api.dto.response.ClubMemberResponse;
 import com.skhu.skhucapstone.clubmember.domain.ClubJoinStatus;
 import com.skhu.skhucapstone.clubmember.domain.ClubMember;
+import com.skhu.skhucapstone.clubmember.domain.ClubRole;
 import com.skhu.skhucapstone.clubmember.domain.repository.ClubMemberRepository;
 import com.skhu.skhucapstone.user.entity.User;
-import com.skhu.skhucapstone.user.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
+import com.skhu.skhucapstone.user.repository.UserRepository;import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -26,34 +29,59 @@ public class ClubMemberService {
 
     @Transactional
     public ClubMemberResponse registerMembers(Long clubId, ClubMemberRequest request) {
+        validateHasPresident(request);
+        validateDuplicateUserInRequest(request);
+
         Club club = clubRepository.findById(clubId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 동아리를 찾을 수 없습니다. clubId = " + clubId));
 
-        int registeredCount = 0;
+        List<ClubMember> clubMembers = request.members().stream()
+                .map(memberInfo -> {
+                    User user = userRepository.findById(memberInfo.userId())
+                            .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다. userId = " + memberInfo.userId()));
 
-        for (ClubMemberRequest.MemberInfo memberInfo : request.members()) {
-            User user = userRepository.findById(memberInfo.userId())
-                    .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다. userId = " + memberInfo.userId()));
+                    validateAlreadyRegistered(club, user);
 
-            if (clubMemberRepository.existsByClubAndUser(club, user)) {
-                continue;
-            }
+                    return ClubMember.builder()
+                            .club(club)
+                            .user(user)
+                            .role(memberInfo.role())
+                            .build();
+                })
+                .toList();
 
-            ClubMember clubMember = ClubMember.builder()
-                    .club(club)
-                    .user(user)
-                    .role(memberInfo.role())
-                    .build();
-
-            clubMemberRepository.save(clubMember);
-            registeredCount++;
-        }
+        clubMemberRepository.saveAll(clubMembers);
 
         return new ClubMemberResponse(
-                clubId,
-                registeredCount,
+                club.getId(),
+                clubMembers.size(),
                 ClubJoinStatus.JOINED,
                 LocalDateTime.now()
         );
+    }
+
+    private void validateHasPresident(ClubMemberRequest request) {
+        boolean hasPresident = request.members().stream()
+                .anyMatch(memberInfo -> memberInfo.role() == ClubRole.PRESIDENT);
+
+        if (!hasPresident) {
+            throw new IllegalArgumentException("부원 명단에는 PRESIDENT 역할이 최소 1명 이상 필요합니다.");
+        }
+    }
+
+    private void validateDuplicateUserInRequest(ClubMemberRequest request) {
+        Set<Long> userIds = new HashSet<>();
+
+        for (ClubMemberRequest.MemberInfo memberInfo : request.members()) {
+            if (!userIds.add(memberInfo.userId())) {
+                throw new IllegalArgumentException("요청한 부원 명단에 중복된 userId가 있습니다. userId = " + memberInfo.userId());
+            }
+        }
+    }
+
+    private void validateAlreadyRegistered(Club club, User user) {
+        if (clubMemberRepository.existsByClubAndUser(club, user)) {
+            throw new IllegalArgumentException("이미 해당 동아리에 등록된 사용자입니다. userId = " + user.getUserId());
+        }
     }
 }

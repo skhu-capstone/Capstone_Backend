@@ -33,6 +33,7 @@ public class SecurityConfig {
                                 "/api/clubs/**",
                                 "/api/admin/clubs",
                                 "/api/admin/clubs/**",
+                                "/api/clubs/*/members",
                                 "/v3/api-docs/**",
                                 "/webjars/**"
                         ).permitAll()
