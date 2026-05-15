@@ -28,12 +28,21 @@ public enum ErrorCode {
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "UNAUTHORIZED", "로그인이 필요합니다."),
     INVALID_REQUEST(HttpStatus.BAD_REQUEST, "INVALID_REQUEST", "올바르지 않은 요청입니다."),
 
+    // 커피챗
+    COFFEECHAT_PROFILE_NOT_FOUND(HttpStatus.NOT_FOUND, "COFFEECHAT_PROFILE_NOT_FOUND", "커피챗 프로필을 찾을 수 없습니다."),
+    INVALID_COFFEECHAT_PROFILE_REQUEST(HttpStatus.BAD_REQUEST, "INVALID_COFFEECHAT_PROFILE_REQUEST", "커피챗 프로필 요청 형식이 올바르지 않습니다."),
+    COFFEECHAT_PROFILE_PRIVATE(HttpStatus.FORBIDDEN, "COFFEECHAT_PROFILE_PRIVATE", "비공개 커피챗 프로필입니다."),
+
+
     // ClubMember
     CLUB_MEMBER_PRESIDENT_REQUIRED(HttpStatus.BAD_REQUEST, "CLUB_MEMBER_PRESIDENT_REQUIRED", "부원 명단에는 PRESIDENT 역할이 최소 1명 이상 필요합니다."),
     CLUB_MEMBER_DUPLICATE_USER(HttpStatus.BAD_REQUEST, "CLUB_MEMBER_DUPLICATE_USER", "요청한 부원 명단에 중복된 사용자가 있습니다."),
     CLUB_MEMBER_ALREADY_REGISTERED(HttpStatus.CONFLICT, "CLUB_MEMBER_ALREADY_REGISTERED", "이미 해당 동아리에 등록된 사용자입니다."),
     CLUB_NOT_FOUND(HttpStatus.NOT_FOUND, "CLUB_NOT_FOUND", "해당 동아리를 찾을 수 없습니다."),
-    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER_NOT_FOUND", "해당 사용자를 찾을 수 없습니다.");
+
+
+    // 유저
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER_NOT_FOUND", "유저를 찾을 수 없습니다.");
 
     private final HttpStatus status;
     private final String code;
