@@ -40,6 +40,12 @@ public enum ErrorCode {
     CLUB_MEMBER_ALREADY_REGISTERED(HttpStatus.CONFLICT, "CLUB_MEMBER_ALREADY_REGISTERED", "이미 해당 동아리에 등록된 사용자입니다."),
     CLUB_NOT_FOUND(HttpStatus.NOT_FOUND, "CLUB_NOT_FOUND", "해당 동아리를 찾을 수 없습니다."),
 
+    // Post
+    POST_NOT_FOUND(HttpStatus.NOT_FOUND, "POST_NOT_FOUND", "게시글을 찾을 수 없습니다."),
+    POST_WRITE_FORBIDDEN(HttpStatus.FORBIDDEN, "POST_WRITE_FORBIDDEN", "게시글 작성 권한이 없습니다."),
+    POST_UPDATE_FORBIDDEN(HttpStatus.FORBIDDEN, "POST_UPDATE_FORBIDDEN", "게시글 수정 권한이 없습니다."),
+    POST_DELETE_FORBIDDEN(HttpStatus.FORBIDDEN, "POST_DELETE_FORBIDDEN", "게시글 삭제 권한이 없습니다."),
+
 
     // 유저
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER_NOT_FOUND", "유저를 찾을 수 없습니다.");

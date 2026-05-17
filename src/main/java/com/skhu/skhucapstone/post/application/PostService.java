@@ -5,21 +5,23 @@ import com.skhu.skhucapstone.club.domain.repository.ClubRepository;
 import com.skhu.skhucapstone.clubmember.domain.ClubMember;
 import com.skhu.skhucapstone.clubmember.domain.ClubRole;
 import com.skhu.skhucapstone.clubmember.domain.repository.ClubMemberRepository;
+import com.skhu.skhucapstone.common.exception.CustomException;
+import com.skhu.skhucapstone.common.exception.ErrorCode;
 import com.skhu.skhucapstone.post.api.dto.request.PostCreateRequest;
-import com.skhu.skhucapstone.post.api.dto.request.PostUpdateRequest;
 import com.skhu.skhucapstone.post.api.dto.response.PostResponse;
 import com.skhu.skhucapstone.post.domain.Post;
 import com.skhu.skhucapstone.post.domain.repository.PostRepository;
-import com.skhu.skhucapstone.post.exception.PostException;
 import com.skhu.skhucapstone.user.entity.User;
 import com.skhu.skhucapstone.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class PostService {
 
     private final PostRepository postRepository;
@@ -27,26 +29,20 @@ public class PostService {
     private final UserRepository userRepository;
     private final ClubMemberRepository clubMemberRepository;
 
-    public PostResponse createSomePostThing(
-            Long clubId,
-            Long userId,
-            PostCreateRequest request
-    ) {
-
+    @Transactional
+    public PostResponse createPost(Long clubId, Long userId, PostCreateRequest request) {
         Club club = clubRepository.findById(clubId)
-                .orElseThrow(() -> new PostException("동아리를 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.CLUB_NOT_FOUND));
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new PostException("유저를 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        ClubMember clubMember = clubMemberRepository
-                .findByClubAndUser(club, user)
-                .orElseThrow(() -> new PostException("동아리 멤버가 아닙니다."));
+        ClubMember clubMember = clubMemberRepository.findByClubAndUser(club, user)
+                .orElseThrow(() -> new CustomException(ErrorCode.POST_WRITE_FORBIDDEN));
 
         if (clubMember.getRole() != ClubRole.STAFF &&
                 clubMember.getRole() != ClubRole.PRESIDENT) {
-
-            throw new PostException("게시글 작성 권한이 없습니다.");
+            throw new CustomException(ErrorCode.POST_WRITE_FORBIDDEN);
         }
 
         Post post = Post.builder()

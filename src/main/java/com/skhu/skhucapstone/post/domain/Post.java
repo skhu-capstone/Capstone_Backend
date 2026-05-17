@@ -44,7 +44,7 @@ public class Post {
     @JoinColumn(name = "club_id")
     private Club club;
 
-    public void updatePostStuff(
+    public void updatePost(
             String title,
             String content,
             String imageUrl,
