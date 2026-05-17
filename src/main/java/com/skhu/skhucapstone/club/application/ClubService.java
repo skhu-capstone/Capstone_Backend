@@ -48,4 +48,35 @@ public class ClubService {
 
         return ClubResponse.from(club);
     }
+
+    @Transactional
+    public ClubResponse approveClub(Long clubId) {
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 동아리를 찾을 수 없습니다. clubId = " + clubId));
+        if (club.isApproved()) {
+            throw new IllegalArgumentException("이미 승인 처리 된 동아리입니다. clubId = " + clubId);
+        }
+
+        club.approve();
+
+        return ClubResponse.from(club);
+    }
+
+    @Transactional
+    public ClubResponse rejectClub(Long clubId) {
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 동아리를 찾을 수 없습니다. clubId = " + clubId));
+
+
+        club.reject();
+
+        return ClubResponse.from(club);
+    }
+
+    public List<ClubResponse> getUnapprovedClubs() {
+        return clubRepository.findByApprovedFalse()
+                .stream()
+                .map(ClubResponse::from)
+                .toList();
+    }
 }

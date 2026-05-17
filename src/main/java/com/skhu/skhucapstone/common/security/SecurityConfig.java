@@ -29,8 +29,11 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/auth/google/login",
                                 "/swagger-ui/**",
-                                "/api/clubs/**",
                                 "/swagger-ui.html",
+                                "/api/clubs/**",
+                                "/api/admin/clubs",
+                                "/api/admin/clubs/**",
+                                "/api/clubs/*/members",
                                 "/v3/api-docs/**",
                                 "/webjars/**"
                         ).permitAll()
