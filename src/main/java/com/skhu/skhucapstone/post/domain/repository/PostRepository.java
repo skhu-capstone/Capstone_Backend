@@ -9,4 +9,8 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findByClub(Club club);
+
+    List<Post> findAllByOrderByCreatedAtDesc();
+
+    List<Post> findByClubOrderByCreatedAtDesc(Club club);
 }

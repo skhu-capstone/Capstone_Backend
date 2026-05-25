@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -66,6 +67,42 @@ public class PostService {
                 .postType(savedPost.getPostType())
                 .writerName(savedPost.getUser().getName())
                 .createdAt(savedPost.getCreatedAt())
+                .build();
+    }
+
+    public List<PostResponse> getPosts() {
+        return postRepository.findAllByOrderByCreatedAtDesc()
+                .stream()
+                .map(this::toPostResponse)
+                .toList();
+    }
+
+    public List<PostResponse> getClubPosts(Long clubId) {
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new CustomException(ErrorCode.CLUB_NOT_FOUND));
+
+        return postRepository.findByClubOrderByCreatedAtDesc(club)
+                .stream()
+                .map(this::toPostResponse)
+                .toList();
+    }
+
+    public PostResponse getPost(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
+
+        return toPostResponse(post);
+    }
+
+    private PostResponse toPostResponse(Post post) {
+        return PostResponse.builder()
+                .postId(post.getPostId())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .imageUrl(post.getImageUrl())
+                .postType(post.getPostType())
+                .writerName(post.getUser().getName())
+                .createdAt(post.getCreatedAt())
                 .build();
     }
 }

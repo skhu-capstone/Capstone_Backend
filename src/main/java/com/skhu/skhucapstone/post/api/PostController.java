@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -27,6 +29,31 @@ public class PostController {
             @RequestBody @Valid PostCreateRequest request
     ) {
         PostResponse response = postService.createPost(clubId, userId, request);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/posts")
+    @Operation(summary = "전체 게시글 조회", description = "전체 동아리 게시글을 최신순으로 조회합니다.")
+    public ResponseEntity<List<PostResponse>> getPosts() {
+        List<PostResponse> response = postService.getPosts();
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/clubs/{clubId}/posts")
+    @Operation(summary = "동아리별 게시글 조회", description = "특정 동아리의 게시글을 최신순으로 조회합니다.")
+    public ResponseEntity<List<PostResponse>> getClubPosts(
+            @PathVariable Long clubId
+    ) {
+        List<PostResponse> response = postService.getClubPosts(clubId);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/posts/{postId}")
+    @Operation(summary = "게시글 상세 조회", description = "게시글 ID로 게시글 상세 정보를 조회합니다.")
+    public ResponseEntity<PostResponse> getPost(
+            @PathVariable Long postId
+    ) {
+        PostResponse response = postService.getPost(postId);
         return ResponseEntity.ok(response);
     }
 }
