@@ -16,6 +16,7 @@ import com.skhu.skhucapstone.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.skhu.skhucapstone.post.api.dto.request.PostUpdateRequest;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -104,5 +105,47 @@ public class PostService {
                 .writerName(post.getUser().getName())
                 .createdAt(post.getCreatedAt())
                 .build();
+    }
+
+    @Transactional
+    public PostResponse updatePost(Long postId, Long userId, PostUpdateRequest request) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
+
+        if (!post.getUser().getUserId().equals(userId)) {
+            throw new CustomException(ErrorCode.POST_UPDATE_FORBIDDEN);
+        }
+
+        post.updatePost(
+                request.title(),
+                request.content(),
+                request.imageUrl(),
+                request.postType()
+        );
+
+        return toPostResponse(post);
+    }
+
+    @Transactional
+    public void deletePost(Long postId, Long userId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        boolean isWriter = post.getUser().getUserId().equals(userId);
+
+        ClubMember clubMember = clubMemberRepository.findByClubAndUser(post.getClub(), user)
+                .orElseThrow(() -> new CustomException(ErrorCode.POST_DELETE_FORBIDDEN));
+
+        boolean isManager = clubMember.getRole() == ClubRole.STAFF ||
+                clubMember.getRole() == ClubRole.PRESIDENT;
+
+        if (!isWriter && !isManager) {
+            throw new CustomException(ErrorCode.POST_DELETE_FORBIDDEN);
+        }
+
+        postRepository.delete(post);
     }
 }

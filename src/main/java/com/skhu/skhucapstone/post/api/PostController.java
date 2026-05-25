@@ -1,6 +1,7 @@
 package com.skhu.skhucapstone.post.api;
 
 import com.skhu.skhucapstone.post.api.dto.request.PostCreateRequest;
+import com.skhu.skhucapstone.post.api.dto.request.PostUpdateRequest;
 import com.skhu.skhucapstone.post.api.dto.response.PostResponse;
 import com.skhu.skhucapstone.post.application.PostService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -55,5 +56,26 @@ public class PostController {
     ) {
         PostResponse response = postService.getPost(postId);
         return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/posts/{postId}")
+    @Operation(summary = "게시글 수정", description = "게시글 작성자만 게시글을 수정할 수 있습니다.")
+    public ResponseEntity<PostResponse> updatePost(
+            @PathVariable Long postId,
+            @AuthenticationPrincipal Long userId,
+            @RequestBody @Valid PostUpdateRequest request
+    ) {
+        PostResponse response = postService.updatePost(postId, userId, request);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/posts/{postId}")
+    @Operation(summary = "게시글 삭제", description = "게시글 작성자 또는 STAFF/PRESIDENT 권한의 동아리 멤버가 게시글을 삭제할 수 있습니다.")
+    public ResponseEntity<Void> deletePost(
+            @PathVariable Long postId,
+            @AuthenticationPrincipal Long userId
+    ) {
+        postService.deletePost(postId, userId);
+        return ResponseEntity.noContent().build();
     }
 }
