@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import java.time.LocalDateTime;
 
 @Service
@@ -67,5 +69,21 @@ public class CommentService {
         }
 
         commentRepository.delete(comment);
+    }
+
+    public List<CommentResponse> getComments(Long postId) {
+
+        Post post = postRepository.findById(postId)
+                .orElseThrow(()  -> new CustomException(ErrorCode.POST_NOT_FOUND));
+
+        return commentRepository.findByPostOrderByCreatedAtAsc(post)
+                .stream()
+                .map(comment -> CommentResponse.builder()
+                        .commentId(comment.getCommentId())
+                        .content(comment.getContent())
+                        .writerName(comment.getUser().getName())
+                        .createdAt(comment.getCreatedAt())
+                        .build())
+                .toList();
     }
 }

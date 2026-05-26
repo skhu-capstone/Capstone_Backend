@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -41,5 +43,15 @@ public class CommentController {
         commentService.deleteComment(commentId, userId);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/posts/{postId}/comments")
+    public ResponseEntity<List<CommentResponse>> getComments(
+            @PathVariable Long postId
+    ) {
+
+        List<CommentResponse> response = commentService.getComments(postId);
+
+        return ResponseEntity.ok(response);
     }
 }
