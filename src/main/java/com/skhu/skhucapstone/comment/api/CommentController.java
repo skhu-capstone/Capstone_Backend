@@ -3,11 +3,13 @@ package com.skhu.skhucapstone.comment.api;
 import com.skhu.skhucapstone.comment.api.dto.request.CommentCreateRequest;
 import com.skhu.skhucapstone.comment.api.dto.response.CommentResponse;
 import com.skhu.skhucapstone.comment.application.CommentService;
+import com.skhu.skhucapstone.common.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import com.skhu.skhucapstone.common.exception.SuccessCode;
 
 import java.util.List;
 
@@ -35,14 +37,13 @@ public class CommentController {
     }
 
     @DeleteMapping("/comments/{commentId}")
-    public ResponseEntity<Void> deleteComment(
+    public ResponseEntity<ApiResponse<Void>> deleteComment(
             @PathVariable Long commentId,
             @AuthenticationPrincipal Long userId
     ) {
-
         commentService.deleteComment(commentId, userId);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.COMMENT_DELETE_SUCCESS, null));
     }
 
     @GetMapping("/posts/{postId}/comments")

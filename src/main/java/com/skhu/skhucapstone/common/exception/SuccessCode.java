@@ -21,6 +21,9 @@ public enum SuccessCode {
     COFFEECHAT_PROFILE_GET_SUCCESS(HttpStatus.OK, "COFFEECHAT_PROFILE_GET_SUCCESS", "커피챗 프로필 조회가 완료되었습니다."),
     COFFEECHAT_PROFILE_LIST_GET_SUCCESS(HttpStatus.OK, "COFFEECHAT_PROFILE_LIST_GET_SUCCESS", "커피챗 프로필 목록 조회가 완료되었습니다."),
 
+    //commment
+    COMMENT_DELETE_SUCCESS(HttpStatus.OK, "COMMENT_DELETE_SUCCESS", "댓글 삭제가 완료되었습니다."),
+
     // 마이페이지
     MYPAGE_GET_SUCCESS(HttpStatus.OK, "MYPAGE_GET_SUCCESS", "마이페이지 조회가 완료되었습니다.");
 
