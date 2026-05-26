@@ -33,6 +33,9 @@ public enum SuccessCode {
     COMMENT_CREATE_SUCCESS(HttpStatus.OK, "COMMENT_CREATE_SUCCESS", "댓글 작성이 완료 되었습니다."),
     COMMENT_LIST_GET_SUCCESS(HttpStatus.OK, "COMMENT_LIST_GET_SUCCESS", "댓글 목록 조회가 완료 되었습니다."),
 
+    // Like
+    LIKE_TOGGLE_SUCCESS(HttpStatus.OK, "LIKE_TOGGLE_SUCCESS", "좋아요 상태가 변경되었습니다."),
+
     // 마이페이지
     MYPAGE_GET_SUCCESS(HttpStatus.OK, "MYPAGE_GET_SUCCESS", "마이페이지 조회가 완료되었습니다.");
 
