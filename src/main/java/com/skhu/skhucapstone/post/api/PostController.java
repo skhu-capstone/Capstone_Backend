@@ -1,5 +1,7 @@
 package com.skhu.skhucapstone.post.api;
 
+import com.skhu.skhucapstone.common.exception.SuccessCode;
+import com.skhu.skhucapstone.common.response.ApiResponse;
 import com.skhu.skhucapstone.post.api.dto.request.PostCreateRequest;
 import com.skhu.skhucapstone.post.api.dto.request.PostUpdateRequest;
 import com.skhu.skhucapstone.post.api.dto.response.PostResponse;
@@ -24,58 +26,60 @@ public class PostController {
 
     @PostMapping("/clubs/{clubId}/posts")
     @Operation(summary = "게시글 생성", description = "STAFF 또는 PRESIDENT 권한을 가진 동아리 멤버가 게시글을 작성합니다.")
-    public ResponseEntity<PostResponse> createPost(
+    public ResponseEntity<ApiResponse<PostResponse>> createPost(
             @PathVariable Long clubId,
             @AuthenticationPrincipal Long userId,
-            @RequestBody @Valid PostCreateRequest request
-    ) {
+            @RequestBody @Valid PostCreateRequest request) {
+
         PostResponse response = postService.createPost(clubId, userId, request);
-        return ResponseEntity.ok(response);
+
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.POST_CREATE_SUCCESS, response));
     }
 
     @GetMapping("/posts")
     @Operation(summary = "전체 게시글 조회", description = "전체 동아리 게시글을 최신순으로 조회합니다.")
-    public ResponseEntity<List<PostResponse>> getPosts() {
+    public ResponseEntity<ApiResponse<List<PostResponse>>> getPosts() {
+
         List<PostResponse> response = postService.getPosts();
-        return ResponseEntity.ok(response);
+
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.POST_LIST_GET_SUCCESS, response));
     }
 
     @GetMapping("/clubs/{clubId}/posts")
     @Operation(summary = "동아리별 게시글 조회", description = "특정 동아리의 게시글을 최신순으로 조회합니다.")
-    public ResponseEntity<List<PostResponse>> getClubPosts(
-            @PathVariable Long clubId
-    ) {
+    public ResponseEntity<ApiResponse<List<PostResponse>>> getClubPosts(@PathVariable Long clubId) {
+
         List<PostResponse> response = postService.getClubPosts(clubId);
-        return ResponseEntity.ok(response);
+
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.POST_LIST_GET_SUCCESS, response));
     }
 
     @GetMapping("/posts/{postId}")
     @Operation(summary = "게시글 상세 조회", description = "게시글 ID로 게시글 상세 정보를 조회합니다.")
-    public ResponseEntity<PostResponse> getPost(
-            @PathVariable Long postId
-    ) {
+    public ResponseEntity<ApiResponse<PostResponse>> getPost(@PathVariable Long postId) {
+
         PostResponse response = postService.getPost(postId);
-        return ResponseEntity.ok(response);
+
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.POST_GET_SUCCESS, response));
     }
 
     @PatchMapping("/posts/{postId}")
     @Operation(summary = "게시글 수정", description = "게시글 작성자만 게시글을 수정할 수 있습니다.")
-    public ResponseEntity<PostResponse> updatePost(
+    public ResponseEntity<ApiResponse<PostResponse>> updatePost(
             @PathVariable Long postId,
             @AuthenticationPrincipal Long userId,
-            @RequestBody @Valid PostUpdateRequest request
-    ) {
+            @RequestBody @Valid PostUpdateRequest request) {
+
         PostResponse response = postService.updatePost(postId, userId, request);
-        return ResponseEntity.ok(response);
+
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.POST_UPDATE_SUCCESS, response));
     }
 
     @DeleteMapping("/posts/{postId}")
     @Operation(summary = "게시글 삭제", description = "게시글 작성자 또는 STAFF/PRESIDENT 권한의 동아리 멤버가 게시글을 삭제할 수 있습니다.")
-    public ResponseEntity<Void> deletePost(
-            @PathVariable Long postId,
-            @AuthenticationPrincipal Long userId
-    ) {
+    public ResponseEntity<ApiResponse<Void>> deletePost(@PathVariable Long postId, @AuthenticationPrincipal Long userId) {
         postService.deletePost(postId, userId);
-        return ResponseEntity.noContent().build();
+
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.POST_DELETE_SUCCESS, null));
     }
 }

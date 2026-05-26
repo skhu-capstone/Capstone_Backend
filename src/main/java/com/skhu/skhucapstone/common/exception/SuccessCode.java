@@ -21,8 +21,17 @@ public enum SuccessCode {
     COFFEECHAT_PROFILE_GET_SUCCESS(HttpStatus.OK, "COFFEECHAT_PROFILE_GET_SUCCESS", "커피챗 프로필 조회가 완료되었습니다."),
     COFFEECHAT_PROFILE_LIST_GET_SUCCESS(HttpStatus.OK, "COFFEECHAT_PROFILE_LIST_GET_SUCCESS", "커피챗 프로필 목록 조회가 완료되었습니다."),
 
-    //commment
-    COMMENT_DELETE_SUCCESS(HttpStatus.OK, "COMMENT_DELETE_SUCCESS", "댓글 삭제가 완료되었습니다."),
+    // Post
+    POST_CREATE_SUCCESS(HttpStatus.OK, "POST_CREATE_SUCCESS", "게시글 작성이 완료되었습니다."),
+    POST_LIST_GET_SUCCESS(HttpStatus.OK, "POST_LIST_GET_SUCCESS", "게시글 목록 조회가 완료되었습니다."),
+    POST_GET_SUCCESS(HttpStatus.OK, "POST_GET_SUCCESS", "게시글 조회가 완료되었습니다."),
+    POST_UPDATE_SUCCESS(HttpStatus.OK, "POST_UPDATE_SUCCESS", "게시글 수정이 완료되었습니다."),
+    POST_DELETE_SUCCESS(HttpStatus.OK, "POST_DELETE_SUCCESS", "게시글 삭제가 완료되었습니다."),
+
+    //Commment
+    COMMENT_DELETE_SUCCESS(HttpStatus.OK, "COMMENT_DELETE_SUCCESS", "댓글 삭제가 완료 되었습니다."),
+    COMMENT_CREATE_SUCCESS(HttpStatus.OK, "COMMENT_CREATE_SUCCESS", "댓글 작성이 완료 되었습니다."),
+    COMMENT_LIST_GET_SUCCESS(HttpStatus.OK, "COMMENT_LIST_GET_SUCCESS", "댓글 목록 조회가 완료 되었습니다."),
 
     // 마이페이지
     MYPAGE_GET_SUCCESS(HttpStatus.OK, "MYPAGE_GET_SUCCESS", "마이페이지 조회가 완료되었습니다.");
