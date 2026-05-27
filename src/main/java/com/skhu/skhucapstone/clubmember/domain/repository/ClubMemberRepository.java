@@ -16,4 +16,6 @@ public interface ClubMemberRepository extends JpaRepository<ClubMember, Long> {
     boolean existsByClubAndUser(Club club, User user);
 
     Optional<ClubMember> findByClubAndUser(Club club, User user);
+
+    List<ClubMember> findByClubAndClubJoinStatus(Club club, ClubJoinStatus clubJoinStatus);
 }

@@ -36,6 +36,9 @@ public enum SuccessCode {
     // Like
     LIKE_TOGGLE_SUCCESS(HttpStatus.OK, "LIKE_TOGGLE_SUCCESS", "좋아요 상태가 변경되었습니다."),
 
+    // ClubMember
+    CLUB_MEMBER_LIST_GET_SUCCESS(HttpStatus.OK, "CLUB_MEMBER_LIST_GET_SUCCESS", "동아리 멤버 목록 조회가 완료되었습니다."),
+
     // 마이페이지
     MYPAGE_GET_SUCCESS(HttpStatus.OK, "MYPAGE_GET_SUCCESS", "마이페이지 조회가 완료되었습니다.");
 

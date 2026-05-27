@@ -15,6 +15,7 @@ import com.skhu.skhucapstone.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.skhu.skhucapstone.clubmember.api.dto.response.ClubMemberListResponse;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -86,5 +87,20 @@ public class ClubMemberService {
         if (clubMemberRepository.existsByClubAndUser(club, user)) {
             throw new CustomException(ErrorCode.CLUB_MEMBER_ALREADY_REGISTERED);
         }
+    }
+
+    public List<ClubMemberListResponse> getClubMembers(Long clubId) {
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new CustomException(ErrorCode.CLUB_NOT_FOUND));
+
+        return clubMemberRepository.findByClubAndClubJoinStatus(club, ClubJoinStatus.JOINED)
+                .stream()
+                .map(clubMember -> ClubMemberListResponse.builder()
+                        .userId(clubMember.getUser().getUserId())
+                        .name(clubMember.getUser().getName())
+                        .profileImage(clubMember.getUser().getProfileImage())
+                        .role(clubMember.getRole())
+                        .build())
+                .toList();
     }
 }
