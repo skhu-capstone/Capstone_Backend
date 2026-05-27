@@ -4,6 +4,7 @@ import com.skhu.skhucapstone.club.domain.Club;
 import com.skhu.skhucapstone.club.domain.repository.ClubRepository;
 import com.skhu.skhucapstone.clubmember.api.dto.request.ClubMemberRequest;
 import com.skhu.skhucapstone.clubmember.api.dto.response.ClubMemberResponse;
+import com.skhu.skhucapstone.clubmember.api.dto.response.MyClubResponse;
 import com.skhu.skhucapstone.clubmember.domain.ClubJoinStatus;
 import com.skhu.skhucapstone.clubmember.domain.ClubMember;
 import com.skhu.skhucapstone.clubmember.domain.ClubRole;
@@ -100,6 +101,23 @@ public class ClubMemberService {
                         .name(clubMember.getUser().getName())
                         .profileImage(clubMember.getUser().getProfileImage())
                         .role(clubMember.getRole())
+                        .build())
+                .toList();
+    }
+
+    public List<MyClubResponse> getMyClubs(Long userId) {
+
+        return clubMemberRepository
+                .findByUserUserIdAndClubJoinStatus(
+                        userId,
+                        ClubJoinStatus.JOINED
+                )
+                .stream()
+                .map(clubMember -> MyClubResponse.builder()
+                        .clubId(clubMember.getClub().getId())
+                        .clubName(clubMember.getClub().getClubName())
+                        .imageUrl(clubMember.getClub().getImageUrl())
+                        .category(clubMember.getClub().getCategory())
                         .build())
                 .toList();
     }
