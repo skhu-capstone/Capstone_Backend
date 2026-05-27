@@ -24,8 +24,6 @@ public class Post {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    private String imageUrl;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PostType postType;
@@ -47,12 +45,10 @@ public class Post {
     public void updatePost(
             String title,
             String content,
-            String imageUrl,
             PostType postType
     ) {
         this.title = title;
         this.content = content;
-        this.imageUrl = imageUrl;
         this.postType = postType;
         this.updatedAt = LocalDateTime.now();
     }

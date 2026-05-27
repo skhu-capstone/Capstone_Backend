@@ -4,6 +4,8 @@ import com.skhu.skhucapstone.post.domain.PostType;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.List;
+
 import java.time.LocalDateTime;
 
 @Getter
@@ -16,7 +18,7 @@ public class PostResponse {
 
     private String content;
 
-    private String imageUrl;
+    private List<String> imageUrls;
 
     private PostType postType;
 
