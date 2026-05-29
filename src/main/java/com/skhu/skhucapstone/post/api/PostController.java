@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import com.skhu.skhucapstone.post.api.dto.response.PostPageResponse;
 
 import java.util.List;
 
@@ -37,21 +38,30 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    @Operation(summary = "전체 게시글 조회", description = "전체 동아리 게시글을 최신순으로 조회합니다.")
-    public ResponseEntity<ApiResponse<List<PostResponse>>> getPosts() {
+    @Operation(summary = "전체 게시글 조회", description = "전체 동아리 게시글을 페이지 단위로 조회합니다.")
+    public ResponseEntity<ApiResponse<PostPageResponse>> getPosts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "4") int size
+    ) {
+        PostPageResponse response = postService.getPosts(page, size);
 
-        List<PostResponse> response = postService.getPosts();
-
-        return ResponseEntity.ok(ApiResponse.success(SuccessCode.POST_LIST_GET_SUCCESS, response));
+        return ResponseEntity.ok(
+                ApiResponse.success(SuccessCode.POST_LIST_GET_SUCCESS, response)
+        );
     }
 
     @GetMapping("/clubs/{clubId}/posts")
-    @Operation(summary = "동아리별 게시글 조회", description = "특정 동아리의 게시글을 최신순으로 조회합니다.")
-    public ResponseEntity<ApiResponse<List<PostResponse>>> getClubPosts(@PathVariable Long clubId) {
+    @Operation(summary = "동아리별 게시글 조회", description = "특정 동아리의 게시글을 페이지 단위로 조회합니다.")
+    public ResponseEntity<ApiResponse<PostPageResponse>> getClubPosts(
+            @PathVariable Long clubId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "4") int size
+    ) {
+        PostPageResponse response = postService.getClubPosts(clubId, page, size);
 
-        List<PostResponse> response = postService.getClubPosts(clubId);
-
-        return ResponseEntity.ok(ApiResponse.success(SuccessCode.POST_CLUB_LIST_GET_SUCCESS, response));
+        return ResponseEntity.ok(
+                ApiResponse.success(SuccessCode.POST_CLUB_LIST_GET_SUCCESS, response)
+        );
     }
 
     @GetMapping("/posts/{postId}")

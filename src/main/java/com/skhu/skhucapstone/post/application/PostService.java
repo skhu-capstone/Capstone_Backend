@@ -9,6 +9,7 @@ import com.skhu.skhucapstone.common.exception.CustomException;
 import com.skhu.skhucapstone.common.exception.ErrorCode;
 import com.skhu.skhucapstone.post.api.dto.request.PostCreateRequest;
 import com.skhu.skhucapstone.post.api.dto.request.PostUpdateRequest;
+import com.skhu.skhucapstone.post.api.dto.response.PostPageResponse;
 import com.skhu.skhucapstone.post.api.dto.response.PostResponse;
 import com.skhu.skhucapstone.post.domain.Post;
 import com.skhu.skhucapstone.post.domain.PostImage;
@@ -23,6 +24,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @Service
 @RequiredArgsConstructor
@@ -68,21 +73,43 @@ public class PostService {
         return toPostResponse(savedPost);
     }
 
-    public List<PostResponse> getPosts() {
-        return postRepository.findAllByOrderByCreatedAtDesc()
-                .stream()
-                .map(this::toPostResponse)
-                .toList();
+    public PostPageResponse getPosts(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Post> posts = postRepository.findAllByOrderByCreatedAtDesc(pageable);
+
+        return PostPageResponse.builder()
+                .content(posts.getContent()
+                        .stream()
+                        .map(this::toPostResponse)
+                        .toList())
+                .page(posts.getNumber())
+                .size(posts.getSize())
+                .totalElements(posts.getTotalElements())
+                .totalPages(posts.getTotalPages())
+                .last(posts.isLast())
+                .build();
     }
 
-    public List<PostResponse> getClubPosts(Long clubId) {
+    public PostPageResponse getClubPosts(Long clubId, int page, int size) {
         Club club = clubRepository.findById(clubId)
                 .orElseThrow(() -> new CustomException(ErrorCode.CLUB_NOT_FOUND));
 
-        return postRepository.findByClubOrderByCreatedAtDesc(club)
-                .stream()
-                .map(this::toPostResponse)
-                .toList();
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Post> posts = postRepository.findByClubOrderByCreatedAtDesc(club, pageable);
+
+        return PostPageResponse.builder()
+                .content(posts.getContent()
+                        .stream()
+                        .map(this::toPostResponse)
+                        .toList())
+                .page(posts.getNumber())
+                .size(posts.getSize())
+                .totalElements(posts.getTotalElements())
+                .totalPages(posts.getTotalPages())
+                .last(posts.isLast())
+                .build();
     }
 
     public PostResponse getPost(Long postId) {
