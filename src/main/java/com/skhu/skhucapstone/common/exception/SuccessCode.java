@@ -23,8 +23,9 @@ public enum SuccessCode {
 
     // Post
     POST_CREATE_SUCCESS(HttpStatus.OK, "POST_CREATE_SUCCESS", "게시글 작성이 완료되었습니다."),
-    POST_LIST_GET_SUCCESS(HttpStatus.OK, "POST_LIST_GET_SUCCESS", "게시글 목록 조회가 완료되었습니다."),
-    POST_GET_SUCCESS(HttpStatus.OK, "POST_GET_SUCCESS", "게시글 조회가 완료되었습니다."),
+    POST_LIST_GET_SUCCESS(HttpStatus.OK, "POST_LIST_GET_SUCCESS", "게시글 전체 목록 조회가 완료되었습니다."),
+    POST_CLUB_LIST_GET_SUCCESS(HttpStatus.OK, "POST_CLUB_LIST_GET_SUCCESS", "동아리별 게시물 조회가 완료되었습니다."),
+    POST_DETAIL_GET_SUCCESS(HttpStatus.OK, "POST_DETAIL_GET_SUCCESS", "게시물 상세 조회가 완료되었습니다."),
     POST_UPDATE_SUCCESS(HttpStatus.OK, "POST_UPDATE_SUCCESS", "게시글 수정이 완료되었습니다."),
     POST_DELETE_SUCCESS(HttpStatus.OK, "POST_DELETE_SUCCESS", "게시글 삭제가 완료되었습니다."),
 

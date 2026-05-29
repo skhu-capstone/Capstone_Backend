@@ -51,7 +51,7 @@ public class PostController {
 
         List<PostResponse> response = postService.getClubPosts(clubId);
 
-        return ResponseEntity.ok(ApiResponse.success(SuccessCode.POST_LIST_GET_SUCCESS, response));
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.POST_CLUB_LIST_GET_SUCCESS, response));
     }
 
     @GetMapping("/posts/{postId}")
@@ -60,7 +60,7 @@ public class PostController {
 
         PostResponse response = postService.getPost(postId);
 
-        return ResponseEntity.ok(ApiResponse.success(SuccessCode.POST_GET_SUCCESS, response));
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.POST_DETAIL_GET_SUCCESS, response));
     }
 
     @PatchMapping("/posts/{postId}")
