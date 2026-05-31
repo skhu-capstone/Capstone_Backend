@@ -46,16 +46,16 @@ public class ChatController {
         return ResponseEntity.ok(ApiResponse.success(SuccessCode.CHAT_ROOM_LIST_FETCH_SUCCESS, res));
     }
 
-    // 메시지 전송
-    @PostMapping("/rooms/{chatRoomId}/messages")
-    @Operation(summary = "메시지 전송", description = "채팅방에 메시지를 전송합니다.")
-    public ResponseEntity<ApiResponse<ChatMessageRes>> sendMessage(
-            @AuthenticationPrincipal Long userId,
-            @PathVariable Long chatRoomId,
-            @Valid @RequestBody ChatMessageSendReq req) {
-        ChatMessageRes res = chatService.sendMessage(userId, chatRoomId, req);
-        return ResponseEntity.ok(ApiResponse.success(SuccessCode.CHAT_MESSAGE_SEND_SUCCESS, res));
-    }
+    // 메시지 전송 - WebSocket으로 대체됨 (/app/chat/{chatRoomId}/send)
+//    @PostMapping("/rooms/{chatRoomId}/messages")
+//    @Operation(summary = "메시지 전송", description = "채팅방에 메시지를 전송합니다.")
+//    public ResponseEntity<ApiResponse<ChatMessageRes>> sendMessage(
+//            @AuthenticationPrincipal Long userId,
+//            @PathVariable Long chatRoomId,
+//            @Valid @RequestBody ChatMessageSendReq req) {
+//        ChatMessageRes res = chatService.sendMessage(userId, chatRoomId, req);
+//        return ResponseEntity.ok(ApiResponse.success(SuccessCode.CHAT_MESSAGE_SEND_SUCCESS, res));
+//    }
 
     // 채팅방 메시지 목록 조회 (페이징)
     @GetMapping("/rooms/{chatRoomId}/messages")
