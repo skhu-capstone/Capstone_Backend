@@ -51,6 +51,7 @@ public enum ErrorCode {
     CLUB_COLLAB_WRITE_FORBIDDEN(HttpStatus.FORBIDDEN, "CLUB_COLLAB_WRITE_FORBIDDEN", "협업 모집글 작성 권한이 없습니다."),
     CLUB_COLLAB_UPDATE_FORBIDDEN(HttpStatus.FORBIDDEN, "CLUB_COLLAB_UPDATE_FORBIDDEN", "협업 모집글 수정 권한이 없습니다."),
     CLUB_COLLAB_DELETE_FORBIDDEN(HttpStatus.FORBIDDEN, "CLUB_COLLAB_DELETE_FORBIDDEN", "협업 모집글 삭제 권한이 없습니다."),
+    CLUB_COLLAB_INVALID_DATE(HttpStatus.BAD_REQUEST, "CLUB_COLLAB_INVALID_DATE", "마감일은 대회 날짜보다 늦을 수 없습니다."),
 
     // 댓글
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMENT_NOT_FOUND", "댓글을 찾을 수 없습니다."),

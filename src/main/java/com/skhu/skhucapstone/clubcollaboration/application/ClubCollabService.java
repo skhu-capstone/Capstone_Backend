@@ -49,6 +49,8 @@ public class ClubCollabService {
 
         validateCollabWritePermission(club, user);
 
+        validateDate(request.contestDate(), request.deadline());
+
         ClubCollaboration clubCollaboration = ClubCollaboration.builder()
                 .title(request.title())
                 .contestName(request.contestName())
@@ -104,6 +106,8 @@ public class ClubCollabService {
 
         validateCollabWriter(collab, userId, ErrorCode.CLUB_COLLAB_UPDATE_FORBIDDEN);
 
+        validateDate(request.contestDate(), request.deadline());
+
         collab.updateCollab(
                 request.title(),
                 request.contestName(),
@@ -135,6 +139,13 @@ public class ClubCollabService {
             throw new CustomException(ErrorCode.CLUB_COLLAB_WRITE_FORBIDDEN);
         }
     }
+
+    private void validateDate(LocalDate contestDate, LocalDate deadline){
+        if (deadline.isAfter(contestDate)){
+            throw new CustomException(ErrorCode.CLUB_COLLAB_INVALID_DATE);
+        }
+    }
+
 
     private void validateCollabWriter(
             ClubCollaboration collab,
