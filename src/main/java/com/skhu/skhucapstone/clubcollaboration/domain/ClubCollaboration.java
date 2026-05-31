@@ -34,6 +34,9 @@ public class ClubCollaboration {
     @Column(nullable = false)
     private LocalDate deadline;
 
+    @Column(length = 1000)
+    private String imageUrl;
+
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
@@ -53,13 +56,16 @@ public class ClubCollaboration {
             String contestName,
             LocalDate contestDate,
             String content,
-            LocalDate deadline
-    ) {
+            LocalDate deadline,
+            String imageUrl
+    )
+    {
         this.title = title;
         this.contestName = contestName;
         this.contestDate = contestDate;
         this.content = content;
         this.deadline = deadline;
+        this.imageUrl = imageUrl;
         this.updatedAt = LocalDateTime.now();
     }
 }

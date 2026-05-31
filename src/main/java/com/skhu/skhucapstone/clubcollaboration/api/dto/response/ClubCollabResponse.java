@@ -18,6 +18,8 @@ public class ClubCollabResponse {
 
     private String title;
 
+    private String imageUrl;
+
     private String contestName;
 
     private LocalDate contestDate;

@@ -55,6 +55,7 @@ public class ClubCollabService {
                 .contestDate(request.contestDate())
                 .content(request.content())
                 .deadline(request.deadline())
+                .imageUrl(request.imageUrl())
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .club(club)
@@ -108,7 +109,8 @@ public class ClubCollabService {
                 request.contestName(),
                 request.contestDate(),
                 request.content(),
-                request.deadline()
+                request.deadline(),
+                request.imageUrl()
         );
 
         return toCollabResponse(collab);
@@ -150,6 +152,7 @@ public class ClubCollabService {
                 .clubId(collab.getClub().getId())
                 .clubName(collab.getClub().getClubName())
                 .title(collab.getTitle())
+                .imageUrl(collab.getImageUrl())
                 .contestName(collab.getContestName())
                 .contestDate(collab.getContestDate())
                 .content(collab.getContent())

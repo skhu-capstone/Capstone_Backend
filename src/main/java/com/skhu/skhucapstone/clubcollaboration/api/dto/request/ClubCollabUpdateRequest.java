@@ -12,6 +12,8 @@ public record ClubCollabUpdateRequest(
         @Size(max = 100, message = "협업 모집글 제목은 100자 이하로 입력해주세요.")
         String title,
 
+        String imageUrl,
+
         @NotBlank(message = "대회명은 필수입니다.")
         @Size(max = 100, message = "대회명은 100자 이하로 입력해주세요.")
         String contestName,
