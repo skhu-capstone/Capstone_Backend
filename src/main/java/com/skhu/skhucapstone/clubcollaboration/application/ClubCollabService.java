@@ -144,6 +144,9 @@ public class ClubCollabService {
         if (deadline.isAfter(contestDate)){
             throw new CustomException(ErrorCode.CLUB_COLLAB_INVALID_DATE);
         }
+        if (deadline.isBefore(LocalDate.now())) {
+            throw new CustomException(ErrorCode.CLUB_COLLAB_DEADLINE_PASSED);
+        }
     }
 
 
