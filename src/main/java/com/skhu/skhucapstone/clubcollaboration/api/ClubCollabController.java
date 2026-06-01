@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import com.skhu.skhucapstone.clubcollaboration.api.dto.response.ClubCollabApplyResponse;
 
 @RestController
 @RequiredArgsConstructor
@@ -85,6 +86,26 @@ public class ClubCollabController {
 
         return ResponseEntity.ok(
                 ApiResponse.success(SuccessCode.CLUB_COLLAB_DELETE_SUCCESS, null)
+        );
+    }
+
+    @PostMapping("/{collabId}/apply")
+    @Operation(
+            summary = "협업 모집 문의하기",
+            description = "협업 모집글 작성자와 채팅방을 생성하거나 기존 채팅방을 반환합니다."
+    )
+    public ResponseEntity<ApiResponse<ClubCollabApplyResponse>> applyCollab(
+            @PathVariable Long collabId,
+            @AuthenticationPrincipal Long userId
+    ) {
+        ClubCollabApplyResponse response =
+                clubCollabService.applyCollab(collabId, userId);
+
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        SuccessCode.CLUB_COLLAB_APPLY_SUCCESS,
+                        response
+                )
         );
     }
 }

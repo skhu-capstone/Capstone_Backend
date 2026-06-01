@@ -49,6 +49,7 @@ public enum SuccessCode {
     CLUB_COLLAB_DETAIL_GET_SUCCESS(HttpStatus.OK, "CLUB_COLLAB_DETAIL_GET_SUCCESS", "협업 모집글 상세 조회가 완료되었습니다."),
     CLUB_COLLAB_UPDATE_SUCCESS(HttpStatus.OK, "CLUB_COLLAB_UPDATE_SUCCESS", "협업 모집글 수정이 완료되었습니다."),
     CLUB_COLLAB_DELETE_SUCCESS(HttpStatus.OK, "CLUB_COLLAB_DELETE_SUCCESS", "협업 모집글 삭제가 완료되었습니다."),
+    CLUB_COLLAB_APPLY_SUCCESS(HttpStatus.OK, "CLUB_COLLAB_APPLY_SUCCESS", "협업 모집 문의가 완료되었습니다."),
 
     // 마이페이지
     MYPAGE_GET_SUCCESS(HttpStatus.OK, "MYPAGE_GET_SUCCESS", "마이페이지 조회가 완료되었습니다."),

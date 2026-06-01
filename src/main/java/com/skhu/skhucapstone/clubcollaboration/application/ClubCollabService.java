@@ -21,6 +21,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.skhu.skhucapstone.chat.dto.res.ChatRoomRes;
+import com.skhu.skhucapstone.chat.service.ChatService;
+import com.skhu.skhucapstone.clubcollaboration.api.dto.response.ClubCollabApplyResponse;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -35,6 +38,7 @@ public class ClubCollabService {
     private final ClubRepository clubRepository;
     private final UserRepository userRepository;
     private final ClubMemberRepository clubMemberRepository;
+    private final ChatService chatService;
 
     @Transactional
     public ClubCollabResponse createCollab(
@@ -128,6 +132,27 @@ public class ClubCollabService {
         validateCollabWriter(collab, userId, ErrorCode.CLUB_COLLAB_DELETE_FORBIDDEN);
 
         clubCollabRepository.delete(collab);
+    }
+
+    @Transactional
+    public ClubCollabApplyResponse applyCollab(
+            Long collabId,
+            Long userId
+    ) {
+        ClubCollaboration collab = clubCollabRepository.findById(collabId)
+                .orElseThrow(() -> new CustomException(ErrorCode.CLUB_COLLAB_NOT_FOUND));
+
+        ChatRoomRes chatRoom = chatService.createOrGetChatRoom(
+                userId,
+                collab.getUser().getUserId()
+        );
+
+        return ClubCollabApplyResponse.builder()
+                .collabId(collab.getCollabId())
+                .title(collab.getTitle())
+                .chatRoomId(chatRoom.getChatRoomId())
+                .isNew(chatRoom.getIsNew())
+                .build();
     }
 
     private void validateCollabWritePermission(Club club, User user) {
