@@ -56,7 +56,8 @@ public class ChatService {
     }
     // 협업 모집글 문의하기 등 내부 서비스에서 targetUserId를 바로 알고 있을 때 사용하는 채팅방 생성/반환 메서드
     // 기존 createOrGetChatRoom(Long userId, ChatRoomCreateReq req)는 컨트롤러 요청용으로 유지하고,
-    // 이 메서드는 DTO 생성 없이 userId와 targetUserId만으로 기존 채팅방을 찾거나 새 채팅방을 생성한다.    @Transactional
+    // 이 메서드는 DTO 생성 없이 userId와 targetUserId만으로 기존 채팅방을 찾거나 새 채팅방을 생성한다.
+    @Transactional
     public ChatRoomRes createOrGetChatRoom(
             Long userId,
             Long targetUserId
