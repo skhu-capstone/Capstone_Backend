@@ -46,6 +46,14 @@ public enum ErrorCode {
     POST_UPDATE_FORBIDDEN(HttpStatus.FORBIDDEN, "POST_UPDATE_FORBIDDEN", "게시글 수정 권한이 없습니다."),
     POST_DELETE_FORBIDDEN(HttpStatus.FORBIDDEN, "POST_DELETE_FORBIDDEN", "게시글 삭제 권한이 없습니다."),
 
+    // 협업모집
+    CLUB_COLLAB_NOT_FOUND(HttpStatus.NOT_FOUND, "CLUB_COLLAB_NOT_FOUND", "협업 모집글을 찾을 수 없습니다."),
+    CLUB_COLLAB_WRITE_FORBIDDEN(HttpStatus.FORBIDDEN, "CLUB_COLLAB_WRITE_FORBIDDEN", "협업 모집글 작성 권한이 없습니다."),
+    CLUB_COLLAB_UPDATE_FORBIDDEN(HttpStatus.FORBIDDEN, "CLUB_COLLAB_UPDATE_FORBIDDEN", "협업 모집글 수정 권한이 없습니다."),
+    CLUB_COLLAB_DELETE_FORBIDDEN(HttpStatus.FORBIDDEN, "CLUB_COLLAB_DELETE_FORBIDDEN", "협업 모집글 삭제 권한이 없습니다."),
+    CLUB_COLLAB_INVALID_DATE(HttpStatus.BAD_REQUEST, "CLUB_COLLAB_INVALID_DATE", "마감일은 대회 날짜보다 늦을 수 없습니다."),
+    CLUB_COLLAB_DEADLINE_PASSED(HttpStatus.BAD_REQUEST, "CLUB_COLLAB_DEADLINE_PASSED", "이미 지난 날짜로는 협업 모집글 작성이 불가 합니다."),
+
     // 댓글
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMENT_NOT_FOUND", "댓글을 찾을 수 없습니다."),
     COMMENT_DELETE_FORBIDDEN(HttpStatus.FORBIDDEN, "COMMENT_DELETE_FORBIDDEN", "댓글 삭제 권한이 없습니다."),
