@@ -54,6 +54,36 @@ public class ChatService {
                     return ChatRoomRes.of(newRoom, true);
                 });
     }
+    // 협업 모집글 문의하기 등 내부 서비스에서 targetUserId를 바로 알고 있을 때 사용하는 채팅방 생성/반환 메서드
+    // 기존 createOrGetChatRoom(Long userId, ChatRoomCreateReq req)는 컨트롤러 요청용으로 유지하고,
+    // 이 메서드는 DTO 생성 없이 userId와 targetUserId만으로 기존 채팅방을 찾거나 새 채팅방을 생성한다.    @Transactional
+    public ChatRoomRes createOrGetChatRoom(
+            Long userId,
+            Long targetUserId
+    ) {
+        if (userId.equals(targetUserId)) {
+            throw new CustomException(ErrorCode.CANNOT_CHAT_WITH_SELF);
+        }
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        User targetUser = userRepository.findById(targetUserId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        return chatRoomRepository.findByUsers(user, targetUser)
+                .map(existing -> ChatRoomRes.of(existing, false))
+                .orElseGet(() -> {
+                    ChatRoom newRoom = chatRoomRepository.save(
+                            ChatRoom.builder()
+                                    .user1(user)
+                                    .user2(targetUser)
+                                    .build()
+                    );
+
+                    return ChatRoomRes.of(newRoom, true);
+                });
+    }
 
     // 내 채팅방 목록 조회 (최신 메시지 순)
     @Transactional(readOnly = true)
