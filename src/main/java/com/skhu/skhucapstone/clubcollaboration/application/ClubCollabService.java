@@ -73,11 +73,19 @@ public class ClubCollabService {
         return toCollabResponse(savedCollab);
     }
 
-    public ClubCollabPageResponse getCollabs(int page, int size) {
+    public ClubCollabPageResponse getCollabs(
+            String keyword,
+            int page,
+            int size
+    ) {
         Pageable pageable = PageRequest.of(page, size);
 
+        String searchKeyword = (keyword == null || keyword.isBlank())
+                ? null
+                : keyword;
+
         Page<ClubCollaboration> collabs =
-                clubCollabRepository.findAllByOrderByCreatedAtDesc(pageable);
+                clubCollabRepository.searchCollabs(searchKeyword, pageable);
 
         return ClubCollabPageResponse.builder()
                 .content(collabs.getContent()

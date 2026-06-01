@@ -38,12 +38,13 @@ public class ClubCollabController {
     }
 
     @GetMapping
-    @Operation(summary = "협업 모집글 목록 조회", description = "협업 모집글을 최신순으로 페이지 단위 조회합니다.")
+    @Operation(summary = "협업 모집글 목록 조회", description = "협업 모집글을 최신순으로 페이지 단위 조회하고, 키워드 검색을 지원합니다.")
     public ResponseEntity<ApiResponse<ClubCollabPageResponse>> getCollabs(
+            @RequestParam(required = false) String keyword,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        ClubCollabPageResponse response = clubCollabService.getCollabs(page, size);
+        ClubCollabPageResponse response = clubCollabService.getCollabs(keyword, page, size);
 
         return ResponseEntity.ok(
                 ApiResponse.success(SuccessCode.CLUB_COLLAB_LIST_GET_SUCCESS, response)
