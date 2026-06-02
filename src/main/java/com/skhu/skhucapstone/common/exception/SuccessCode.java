@@ -21,8 +21,46 @@ public enum SuccessCode {
     COFFEECHAT_PROFILE_GET_SUCCESS(HttpStatus.OK, "COFFEECHAT_PROFILE_GET_SUCCESS", "커피챗 프로필 조회가 완료되었습니다."),
     COFFEECHAT_PROFILE_LIST_GET_SUCCESS(HttpStatus.OK, "COFFEECHAT_PROFILE_LIST_GET_SUCCESS", "커피챗 프로필 목록 조회가 완료되었습니다."),
 
+    // Post
+    POST_CREATE_SUCCESS(HttpStatus.OK, "POST_CREATE_SUCCESS", "게시글 작성이 완료되었습니다."),
+    POST_LIST_GET_SUCCESS(HttpStatus.OK, "POST_LIST_GET_SUCCESS", "게시글 전체 목록 조회가 완료되었습니다."),
+    POST_CLUB_LIST_GET_SUCCESS(HttpStatus.OK, "POST_CLUB_LIST_GET_SUCCESS", "동아리별 게시물 조회가 완료되었습니다."),
+    POST_DETAIL_GET_SUCCESS(HttpStatus.OK, "POST_DETAIL_GET_SUCCESS", "게시물 상세 조회가 완료되었습니다."),
+    POST_UPDATE_SUCCESS(HttpStatus.OK, "POST_UPDATE_SUCCESS", "게시글 수정이 완료되었습니다."),
+    POST_DELETE_SUCCESS(HttpStatus.OK, "POST_DELETE_SUCCESS", "게시글 삭제가 완료되었습니다."),
+
+    //Commment
+    COMMENT_DELETE_SUCCESS(HttpStatus.OK, "COMMENT_DELETE_SUCCESS", "댓글 삭제가 완료 되었습니다."),
+    COMMENT_CREATE_SUCCESS(HttpStatus.OK, "COMMENT_CREATE_SUCCESS", "댓글 작성이 완료 되었습니다."),
+    COMMENT_LIST_GET_SUCCESS(HttpStatus.OK, "COMMENT_LIST_GET_SUCCESS", "댓글 목록 조회가 완료 되었습니다."),
+
+    // Like
+    LIKE_TOGGLE_SUCCESS(HttpStatus.OK, "LIKE_TOGGLE_SUCCESS", "좋아요 상태가 변경되었습니다."),
+
+    // Club
+    MY_CLUB_LIST_GET_SUCCESS(HttpStatus.OK,"MY_CLUB_LIST_GET_SUCCESS","내 동아리 목록 조회가 완료되었습니다."),
+
+    // ClubMember
+    CLUB_MEMBER_LIST_GET_SUCCESS(HttpStatus.OK, "CLUB_MEMBER_LIST_GET_SUCCESS", "동아리 멤버 목록 조회가 완료되었습니다."),
+
+    // 협업모집
+    CLUB_COLLAB_CREATE_SUCCESS(HttpStatus.OK, "CLUB_COLLAB_CREATE_SUCCESS", "협업 모집글 작성이 완료되었습니다."),
+    CLUB_COLLAB_LIST_GET_SUCCESS(HttpStatus.OK, "CLUB_COLLAB_LIST_GET_SUCCESS", "협업 모집글 목록 조회가 완료되었습니다."),
+    CLUB_COLLAB_DETAIL_GET_SUCCESS(HttpStatus.OK, "CLUB_COLLAB_DETAIL_GET_SUCCESS", "협업 모집글 상세 조회가 완료되었습니다."),
+    CLUB_COLLAB_UPDATE_SUCCESS(HttpStatus.OK, "CLUB_COLLAB_UPDATE_SUCCESS", "협업 모집글 수정이 완료되었습니다."),
+    CLUB_COLLAB_DELETE_SUCCESS(HttpStatus.OK, "CLUB_COLLAB_DELETE_SUCCESS", "협업 모집글 삭제가 완료되었습니다."),
+    CLUB_COLLAB_APPLY_SUCCESS(HttpStatus.OK, "CLUB_COLLAB_APPLY_SUCCESS", "협업 모집 문의가 완료되었습니다."),
+
     // 마이페이지
-    MYPAGE_GET_SUCCESS(HttpStatus.OK, "MYPAGE_GET_SUCCESS", "마이페이지 조회가 완료되었습니다.");
+    MYPAGE_GET_SUCCESS(HttpStatus.OK, "MYPAGE_GET_SUCCESS", "마이페이지 조회가 완료되었습니다."),
+
+    // 채팅
+    CHAT_ROOM_CREATE_SUCCESS(HttpStatus.OK, "CHAT_ROOM_CREATE_SUCCESS", "채팅방이 생성되었습니다."),
+    CHAT_ROOM_ALREADY_EXISTS(HttpStatus.OK, "CHAT_ROOM_ALREADY_EXISTS", "기존 채팅방을 반환합니다."),
+    CHAT_ROOM_LIST_FETCH_SUCCESS(HttpStatus.OK, "CHAT_ROOM_LIST_FETCH_SUCCESS", "채팅방 목록 조회에 성공했습니다."),
+    CHAT_MESSAGE_SEND_SUCCESS(HttpStatus.OK, "CHAT_MESSAGE_SEND_SUCCESS", "메시지 전송에 성공했습니다."),
+    CHAT_MESSAGE_LIST_FETCH_SUCCESS(HttpStatus.OK, "CHAT_MESSAGE_LIST_FETCH_SUCCESS", "채팅 메시지 목록 조회에 성공했습니다."),
+    CHAT_MESSAGE_READ_SUCCESS(HttpStatus.OK, "CHAT_MESSAGE_READ_SUCCESS", "메시지를 읽음 처리했습니다.");
 
     private final HttpStatus status;
     private final String code;
