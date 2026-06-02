@@ -44,7 +44,8 @@ public class SecurityConfig {
                                 "/api/clubs/*/members",
                                 "/v3/api-docs/**",
                                 "/webjars/**",
-                                "/ws/**"
+                                "/ws/**",
+                                "/actuator/**"
                         ).permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
