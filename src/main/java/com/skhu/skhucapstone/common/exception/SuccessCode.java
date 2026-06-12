@@ -43,6 +43,9 @@ public enum SuccessCode {
     // ClubMember
     CLUB_MEMBER_LIST_GET_SUCCESS(HttpStatus.OK, "CLUB_MEMBER_LIST_GET_SUCCESS", "동아리 멤버 목록 조회가 완료되었습니다."),
 
+    //Main
+    MAIN_GET_SUCCESS(HttpStatus.OK, "MAIN_GET_SUCCESS", "메인페이지 조회가 완료되었습니다."),
+
     // 협업모집
     CLUB_COLLAB_CREATE_SUCCESS(HttpStatus.OK, "CLUB_COLLAB_CREATE_SUCCESS", "협업 모집글 작성이 완료되었습니다."),
     CLUB_COLLAB_LIST_GET_SUCCESS(HttpStatus.OK, "CLUB_COLLAB_LIST_GET_SUCCESS", "협업 모집글 목록 조회가 완료되었습니다."),
@@ -50,6 +53,13 @@ public enum SuccessCode {
     CLUB_COLLAB_UPDATE_SUCCESS(HttpStatus.OK, "CLUB_COLLAB_UPDATE_SUCCESS", "협업 모집글 수정이 완료되었습니다."),
     CLUB_COLLAB_DELETE_SUCCESS(HttpStatus.OK, "CLUB_COLLAB_DELETE_SUCCESS", "협업 모집글 삭제가 완료되었습니다."),
     CLUB_COLLAB_APPLY_SUCCESS(HttpStatus.OK, "CLUB_COLLAB_APPLY_SUCCESS", "협업 모집 문의가 완료되었습니다."),
+
+    // 프로젝트 팀원 모집
+    PROJECT_RECRUITMENT_CREATE_SUCCESS(HttpStatus.OK, "PROJECT_RECRUITMENT_CREATE_SUCCESS", "프로젝트 팀원 모집 글이 등록되었습니다."),
+    PROJECT_RECRUITMENT_LIST_FETCH_SUCCESS(HttpStatus.OK, "PROJECT_RECRUITMENT_LIST_FETCH_SUCCESS", "모집 목록 조회에 성공했습니다."),
+    PROJECT_RECRUITMENT_FETCH_SUCCESS(HttpStatus.OK, "PROJECT_RECRUITMENT_FETCH_SUCCESS", "모집 글 조회에 성공했습니다."),
+    PROJECT_RECRUITMENT_UPDATE_SUCCESS(HttpStatus.OK, "PROJECT_RECRUITMENT_UPDATE_SUCCESS", "모집 글이 수정되었습니다."),
+    PROJECT_RECRUITMENT_DELETE_SUCCESS(HttpStatus.OK, "PROJECT_RECRUITMENT_DELETE_SUCCESS", "모집 글이 삭제되었습니다."),
 
     // 마이페이지
     MYPAGE_GET_SUCCESS(HttpStatus.OK, "MYPAGE_GET_SUCCESS", "마이페이지 조회가 완료되었습니다."),
