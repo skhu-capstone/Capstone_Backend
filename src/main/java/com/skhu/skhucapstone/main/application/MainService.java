@@ -101,6 +101,7 @@ public class MainService {
 
     private ClubFeedRes toClubFeedRes(PostResponse post) {
         return ClubFeedRes.builder()
+                .clubName(post.getClubName())
                 .postId(post.getPostId())
                 .writerName(post.getWriterName())
                 .createdAt(post.getCreatedAt())

@@ -191,6 +191,7 @@ public class PostService {
                 .toList();
 
         return PostResponse.builder()
+                .clubName(post.getClub().getClubName())
                 .postId(post.getPostId())
                 .title(post.getTitle())
                 .content(post.getContent())
