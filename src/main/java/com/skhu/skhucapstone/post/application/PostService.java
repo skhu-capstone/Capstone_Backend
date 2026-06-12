@@ -191,6 +191,7 @@ public class PostService {
                 .toList();
 
         return PostResponse.builder()
+                .clubName(post.getClub().getClubName())
                 .postId(post.getPostId())
                 .title(post.getTitle())
                 .content(post.getContent())
@@ -198,6 +199,26 @@ public class PostService {
                 .postType(post.getPostType())
                 .writerName(post.getUser().getName())
                 .createdAt(post.getCreatedAt())
+                .build();
+    }
+
+    public PostPageResponse getRecommendedPosts(int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Post> posts =
+                postRepository.findAllOrderByLikeCountDesc(pageable);
+
+        return PostPageResponse.builder()
+                .content(posts.getContent()
+                        .stream()
+                        .map(this::toPostResponse)
+                        .toList())
+                .page(posts.getNumber())
+                .size(posts.getSize())
+                .totalElements(posts.getTotalElements())
+                .totalPages(posts.getTotalPages())
+                .last(posts.isLast())
                 .build();
     }
 }

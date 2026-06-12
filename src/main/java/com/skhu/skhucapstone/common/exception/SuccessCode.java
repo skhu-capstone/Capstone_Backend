@@ -43,6 +43,9 @@ public enum SuccessCode {
     // ClubMember
     CLUB_MEMBER_LIST_GET_SUCCESS(HttpStatus.OK, "CLUB_MEMBER_LIST_GET_SUCCESS", "동아리 멤버 목록 조회가 완료되었습니다."),
 
+    //Main
+    MAIN_GET_SUCCESS(HttpStatus.OK, "MAIN_GET_SUCCESS", "메인페이지 조회가 완료되었습니다."),
+
     // 협업모집
     CLUB_COLLAB_CREATE_SUCCESS(HttpStatus.OK, "CLUB_COLLAB_CREATE_SUCCESS", "협업 모집글 작성이 완료되었습니다."),
     CLUB_COLLAB_LIST_GET_SUCCESS(HttpStatus.OK, "CLUB_COLLAB_LIST_GET_SUCCESS", "협업 모집글 목록 조회가 완료되었습니다."),
