@@ -38,15 +38,31 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    @Operation(summary = "전체 게시글 조회", description = "전체 동아리 게시글을 페이지 단위로 조회합니다.")
+    @Operation(
+            summary = "전체 게시글 조회",
+            description = "전체 동아리 게시글을 최신순 또는 좋아요순으로 조회합니다."
+    )
     public ResponseEntity<ApiResponse<PostPageResponse>> getPosts(
+
+            @RequestParam(defaultValue = "latest") String sort,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "4") int size
+
     ) {
-        PostPageResponse response = postService.getPosts(page, size);
+
+        PostPageResponse response;
+
+        if ("likes".equals(sort)) {
+            response = postService.getRecommendedPosts(page, size);
+        } else {
+            response = postService.getPosts(page, size);
+        }
 
         return ResponseEntity.ok(
-                ApiResponse.success(SuccessCode.POST_LIST_GET_SUCCESS, response)
+                ApiResponse.success(
+                        SuccessCode.POST_LIST_GET_SUCCESS,
+                        response
+                )
         );
     }
 
