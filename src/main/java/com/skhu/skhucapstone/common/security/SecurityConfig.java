@@ -56,7 +56,8 @@ public class SecurityConfig {
 
         config.setAllowedOrigins(List.of(
                 "http://localhost:5173",
-                "https://skhucapstone.duckdns.org"
+                "https://skhucapstone.duckdns.org",
+                "https://capstone-frontend-tawny.vercel.app"
         ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
