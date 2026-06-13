@@ -16,6 +16,8 @@ public class CoffeeChatRes {
 
     private String name;
 
+    private String profileImageUrl;
+
     private String headline;
 
     private String interestTopics;
