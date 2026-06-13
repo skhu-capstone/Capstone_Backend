@@ -12,6 +12,7 @@ import com.skhu.skhucapstone.projectrecruitment.dto.res.ProjectRecruitmentPageRe
 import com.skhu.skhucapstone.projectrecruitment.dto.res.ProjectRecruitmentUpdateRes;
 import com.skhu.skhucapstone.projectrecruitment.entity.ProjectRecruitment;
 import com.skhu.skhucapstone.projectrecruitment.repository.ProjectRecruitmentRepository;
+import com.skhu.skhucapstone.common.file.ImageUploadService;
 import com.skhu.skhucapstone.user.entity.User;
 import com.skhu.skhucapstone.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -32,6 +34,7 @@ public class ProjectRecruitmentService {
 
     private final ProjectRecruitmentRepository projectRecruitmentRepository;
     private final UserRepository userRepository;
+    private final ImageUploadService imageUploadService;
 
     @Transactional
     public ProjectRecruitmentCreateRes createRecruitment(
@@ -179,6 +182,20 @@ public class ProjectRecruitmentService {
         if (!recruitment.getUser().getUserId().equals(userId)) {
             throw new CustomException(errorCode);
         }
+    }
+
+    @Transactional
+    public String uploadRecruitmentImage(Long projectRecruitmentId, MultipartFile file) {
+        ProjectRecruitment recruitment = projectRecruitmentRepository.findById(projectRecruitmentId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PROJECT_RECRUITMENT_NOT_FOUND));
+
+        if (recruitment.getImageUrl() != null) {
+            imageUploadService.delete(recruitment.getImageUrl());
+        }
+
+        String imageUrl = imageUploadService.upload(file);
+        recruitment.updateImage(imageUrl);
+        return imageUrl;
     }
 
     private void validateDeadline(LocalDate deadline) {
