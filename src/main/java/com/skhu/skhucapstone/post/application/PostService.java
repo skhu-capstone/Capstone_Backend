@@ -15,11 +15,13 @@ import com.skhu.skhucapstone.post.domain.Post;
 import com.skhu.skhucapstone.post.domain.PostImage;
 import com.skhu.skhucapstone.post.domain.repository.PostImageRepository;
 import com.skhu.skhucapstone.post.domain.repository.PostRepository;
+import com.skhu.skhucapstone.common.file.ImageUploadService;
 import com.skhu.skhucapstone.user.entity.User;
 import com.skhu.skhucapstone.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -39,6 +41,7 @@ public class PostService {
     private final ClubRepository clubRepository;
     private final UserRepository userRepository;
     private final ClubMemberRepository clubMemberRepository;
+    private final ImageUploadService imageUploadService;
 
     @Transactional
     public PostResponse createPost(Long clubId, Long userId, PostCreateRequest request) {
@@ -162,6 +165,24 @@ public class PostService {
 
         postImageRepository.deleteByPost(post);
         postRepository.delete(post);
+    }
+
+    @Transactional
+    public String uploadPostImage(Long postId, MultipartFile file) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
+
+        List<PostImage> existing = postImageRepository.findByPostOrderByImageOrderAsc(post);
+        existing.forEach(img -> imageUploadService.delete(img.getImageUrl()));
+        postImageRepository.deleteByPost(post);
+
+        String imageUrl = imageUploadService.upload(file);
+        postImageRepository.save(PostImage.builder()
+                .post(post)
+                .imageUrl(imageUrl)
+                .imageOrder(0)
+                .build());
+        return imageUrl;
     }
 
     private void savePostImages(Post post, List<String> imageUrls) {
