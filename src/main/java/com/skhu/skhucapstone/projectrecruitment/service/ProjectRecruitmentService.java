@@ -193,7 +193,7 @@ public class ProjectRecruitmentService {
             imageUploadService.delete(recruitment.getImageUrl());
         }
 
-        String imageUrl = imageUploadService.upload(file);
+        String imageUrl = imageUploadService.upload(file, "recruitment");
         recruitment.updateImage(imageUrl);
         return imageUrl;
     }

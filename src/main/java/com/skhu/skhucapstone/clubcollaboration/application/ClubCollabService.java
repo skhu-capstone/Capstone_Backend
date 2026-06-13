@@ -175,7 +175,7 @@ public class ClubCollabService {
             imageUploadService.delete(collab.getImageUrl());
         }
 
-        String imageUrl = imageUploadService.upload(file);
+        String imageUrl = imageUploadService.upload(file, "collab");
         collab.updateImage(imageUrl);
         return imageUrl;
     }

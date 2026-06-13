@@ -85,7 +85,7 @@ public class ClubService {
             imageUploadService.delete(club.getImageUrl());
         }
 
-        String imageUrl = imageUploadService.upload(file);
+        String imageUrl = imageUploadService.upload(file, "club");
         club.updateImage(imageUrl);
         return imageUrl;
     }
