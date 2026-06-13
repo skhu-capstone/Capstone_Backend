@@ -35,7 +35,7 @@ public class MainService {
     }
 
     private List<CoffeeChatRes> getCoffeeChats() {
-        return coffeeChatService.getProfiles(null, 0, 999)
+        return coffeeChatService.getProfiles(null, 0, 998)
                 .getContent()
                 .stream()
                 .map(this::toCoffeeChatRes)
@@ -43,7 +43,7 @@ public class MainService {
     }
 
     private List<ProjectRecruitRes> getProjectRecruitments() {
-        return projectRecruitmentService.getRecruitments(null, 0, 999)
+        return projectRecruitmentService.getRecruitments(null, 0, 998)
                 .getContent()
                 .stream()
                 .map(this::toProjectRecruitRes)
@@ -51,7 +51,7 @@ public class MainService {
     }
 
     private List<ClubCollabRes> getClubCollaborations() {
-        return clubCollabService.getCollabs(null, 0, 999)
+        return clubCollabService.getCollabs(null, 0, 998)
                 .getContent()
                 .stream()
                 .map(this::toClubCollabRes)
@@ -59,7 +59,7 @@ public class MainService {
     }
 
     private List<ClubFeedRes> getClubFeeds() {
-        return postService.getPosts(0, 999)
+        return postService.getPosts(0, 998)
                 .getContent()
                 .stream()
                 .map(this::toClubFeedRes)
