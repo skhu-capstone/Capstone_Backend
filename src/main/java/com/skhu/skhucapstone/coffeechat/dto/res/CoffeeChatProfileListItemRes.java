@@ -19,12 +19,17 @@ public class CoffeeChatProfileListItemRes {
     private List<String> clubs;
     private MeetingType meetingType;
     private Boolean isPublic;
+    private String profileImageUrl;
 
-    public static CoffeeChatProfileListItemRes of(CoffeeChatProfile profile, List<String> clubs) {
+    public static CoffeeChatProfileListItemRes of(
+            CoffeeChatProfile profile,
+            List<String> clubs
+    ) {
         return CoffeeChatProfileListItemRes.builder()
                 .coffeeChatProfileId(profile.getId())
                 .userId(profile.getUser().getUserId())
                 .name(profile.getUser().getName())
+                .profileImageUrl(profile.getProfileImageUrl())
                 .headline(profile.getHeadline())
                 .interestTopics(profile.getInterestTopics())
                 .clubs(clubs)
