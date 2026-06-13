@@ -71,6 +71,7 @@ public class MainService {
                 .coffeeChatProfileId(profile.getCoffeeChatProfileId())
                 .userId(profile.getUserId())
                 .name(profile.getName())
+                .profileImageUrl(profile.getProfileImageUrl())
                 .headline(profile.getHeadline())
                 .interestTopics(profile.getInterestTopics())
                 .clubs(profile.getClubs())
