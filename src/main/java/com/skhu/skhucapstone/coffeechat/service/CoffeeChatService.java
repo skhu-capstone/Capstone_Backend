@@ -128,7 +128,7 @@ public class CoffeeChatService {
         }
 
         // 새 이미지 저장
-        String imageUrl = imageUploadService.upload(file);
+        String imageUrl = imageUploadService.upload(file, "coffeechat");
         profile.updateProfileImage(imageUrl);
 
         return imageUrl;
