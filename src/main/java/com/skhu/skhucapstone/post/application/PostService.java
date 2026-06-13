@@ -176,7 +176,7 @@ public class PostService {
         existing.forEach(img -> imageUploadService.delete(img.getImageUrl()));
         postImageRepository.deleteByPost(post);
 
-        String imageUrl = imageUploadService.upload(file);
+        String imageUrl = imageUploadService.upload(file, "post");
         postImageRepository.save(PostImage.builder()
                 .post(post)
                 .imageUrl(imageUrl)
