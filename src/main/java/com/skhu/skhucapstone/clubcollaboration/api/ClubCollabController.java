@@ -11,9 +11,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import com.skhu.skhucapstone.clubcollaboration.api.dto.response.ClubCollabApplyResponse;
 
 @RestController
@@ -88,6 +90,15 @@ public class ClubCollabController {
         return ResponseEntity.ok(
                 ApiResponse.success(SuccessCode.CLUB_COLLAB_DELETE_SUCCESS, null)
         );
+    }
+
+    @PostMapping(value = "/{collabId}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "협업 모집글 이미지 업로드", description = "협업 모집글 이미지를 업로드합니다.")
+    public ResponseEntity<ApiResponse<String>> uploadCollabImage(
+            @PathVariable Long collabId,
+            @RequestPart MultipartFile file) {
+        String imageUrl = clubCollabService.uploadCollabImage(collabId, file);
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.CLUB_COLLAB_IMAGE_UPLOAD_SUCCESS, imageUrl));
     }
 
     @PostMapping("/{collabId}/apply")

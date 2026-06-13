@@ -51,6 +51,11 @@ public class ClubCollaboration {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    public void updateImage(String imageUrl) {
+        this.imageUrl = imageUrl;
+        this.updatedAt = LocalDateTime.now();
+    }
+
     public void updateCollab(
             String title,
             String contestName,
