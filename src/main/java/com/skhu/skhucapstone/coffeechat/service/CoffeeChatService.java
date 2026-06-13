@@ -14,6 +14,7 @@ import com.skhu.skhucapstone.coffeechat.entity.CoffeeChatProfile;
 import com.skhu.skhucapstone.coffeechat.repository.CoffeeChatProfileRepository;
 import com.skhu.skhucapstone.common.exception.CustomException;
 import com.skhu.skhucapstone.common.exception.ErrorCode;
+import com.skhu.skhucapstone.common.file.ImageUploadService;
 import com.skhu.skhucapstone.user.entity.User;
 import com.skhu.skhucapstone.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,6 +34,7 @@ public class CoffeeChatService {
     private final CoffeeChatProfileRepository coffeeChatProfileRepository;
     private final UserRepository userRepository;
     private final ClubMemberRepository clubMemberRepository;
+    private final ImageUploadService imageUploadService;
 
     // 커피챗 프로필 저장 (없으면 생성, 있으면 수정)
     @Transactional
@@ -49,6 +52,7 @@ public class CoffeeChatService {
                             req.getMeetingType() != null ? req.getMeetingType() : existing.getMeetingType(),
                             req.getContactLink() != null ? req.getContactLink() : existing.getContactLink(),
                             req.getIntroduction() != null ? req.getIntroduction() : existing.getIntroduction(),
+                            existing.getProfileImageUrl(),
                             existing.getIsPublic()
                     );
                     return existing;
@@ -110,6 +114,24 @@ public class CoffeeChatService {
                                 getClubs(profile.getUser().getUserId())
                         ))
         );
+    }
+
+    // 프로필 이미지 업로드
+    @Transactional
+    public String uploadProfileImage(Long userId, MultipartFile file) {
+        CoffeeChatProfile profile = coffeeChatProfileRepository.findByUserUserId(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.COFFEECHAT_PROFILE_NOT_FOUND));
+
+        // 기존 이미지 삭제
+        if (profile.getProfileImageUrl() != null) {
+            imageUploadService.delete(profile.getProfileImageUrl());
+        }
+
+        // 새 이미지 저장
+        String imageUrl = imageUploadService.upload(file);
+        profile.updateProfileImage(imageUrl);
+
+        return imageUrl;
     }
 
     // 유저의 동아리 목록 조회 (동아리명 / 역할)

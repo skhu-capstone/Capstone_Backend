@@ -14,9 +14,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -81,6 +83,15 @@ public class ProjectRecruitmentController {
         return ResponseEntity.ok(
                 ApiResponse.success(SuccessCode.PROJECT_RECRUITMENT_UPDATE_SUCCESS, response)
         );
+    }
+
+    @PostMapping(value = "/{projectRecruitmentId}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "프로젝트 팀원 모집글 이미지 업로드", description = "프로젝트 팀원 모집글 이미지를 업로드합니다.")
+    public ResponseEntity<ApiResponse<String>> uploadRecruitmentImage(
+            @PathVariable Long projectRecruitmentId,
+            @RequestPart MultipartFile file) {
+        String imageUrl = projectRecruitmentService.uploadRecruitmentImage(projectRecruitmentId, file);
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.PROJECT_RECRUITMENT_IMAGE_UPLOAD_SUCCESS, imageUrl));
     }
 
     @DeleteMapping("/{projectRecruitmentId}")

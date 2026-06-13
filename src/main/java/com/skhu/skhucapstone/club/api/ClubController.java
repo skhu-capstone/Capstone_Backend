@@ -9,8 +9,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -73,6 +75,15 @@ public class ClubController {
                         response
                 )
         );
+    }
+
+    @PostMapping(value = "/{clubId}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "동아리 이미지 업로드", description = "동아리 이미지를 업로드합니다.")
+    public ResponseEntity<ApiResponse<String>> uploadClubImage(
+            @PathVariable Long clubId,
+            @RequestPart MultipartFile file) {
+        String imageUrl = clubService.uploadClubImage(clubId, file);
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.CLUB_IMAGE_UPLOAD_SUCCESS, imageUrl));
     }
 
     @PatchMapping("/{clubId}/approve")

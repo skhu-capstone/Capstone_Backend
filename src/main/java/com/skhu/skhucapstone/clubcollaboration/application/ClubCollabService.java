@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.skhu.skhucapstone.chat.dto.res.ChatRoomRes;
 import com.skhu.skhucapstone.chat.service.ChatService;
 import com.skhu.skhucapstone.clubcollaboration.api.dto.response.ClubCollabApplyResponse;
+import com.skhu.skhucapstone.common.file.ImageUploadService;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -39,6 +41,7 @@ public class ClubCollabService {
     private final UserRepository userRepository;
     private final ClubMemberRepository clubMemberRepository;
     private final ChatService chatService;
+    private final ImageUploadService imageUploadService;
 
     @Transactional
     public ClubCollabResponse createCollab(
@@ -161,6 +164,20 @@ public class ClubCollabService {
                 .chatRoomId(chatRoom.getChatRoomId())
                 .isNew(chatRoom.getIsNew())
                 .build();
+    }
+
+    @Transactional
+    public String uploadCollabImage(Long collabId, MultipartFile file) {
+        ClubCollaboration collab = clubCollabRepository.findById(collabId)
+                .orElseThrow(() -> new CustomException(ErrorCode.CLUB_COLLAB_NOT_FOUND));
+
+        if (collab.getImageUrl() != null) {
+            imageUploadService.delete(collab.getImageUrl());
+        }
+
+        String imageUrl = imageUploadService.upload(file);
+        collab.updateImage(imageUrl);
+        return imageUrl;
     }
 
     private void validateCollabWritePermission(Club club, User user) {

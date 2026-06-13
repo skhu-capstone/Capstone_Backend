@@ -10,9 +10,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import com.skhu.skhucapstone.post.api.dto.response.PostPageResponse;
 
 import java.util.List;
@@ -99,6 +101,15 @@ public class PostController {
         PostResponse response = postService.updatePost(postId, userId, request);
 
         return ResponseEntity.ok(ApiResponse.success(SuccessCode.POST_UPDATE_SUCCESS, response));
+    }
+
+    @PostMapping(value = "/posts/{postId}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "게시글 이미지 업로드", description = "게시글 이미지를 업로드합니다.")
+    public ResponseEntity<ApiResponse<String>> uploadPostImage(
+            @PathVariable Long postId,
+            @RequestPart MultipartFile file) {
+        String imageUrl = postService.uploadPostImage(postId, file);
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.POST_IMAGE_UPLOAD_SUCCESS, imageUrl));
     }
 
     @DeleteMapping("/posts/{postId}")

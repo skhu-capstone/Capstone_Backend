@@ -16,6 +16,7 @@ public class CoffeeChatProfileRes {
     private MeetingType meetingType;
     private String contactLink;
     private String introduction;
+    private String profileImageUrl;
     private Boolean isPublic;
 
     public static CoffeeChatProfileRes from(CoffeeChatProfile profile) {
@@ -27,6 +28,7 @@ public class CoffeeChatProfileRes {
                 .meetingType(profile.getMeetingType())
                 .contactLink(profile.getContactLink())
                 .introduction(profile.getIntroduction())
+                .profileImageUrl(profile.getProfileImageUrl())
                 .isPublic(profile.getIsPublic())
                 .build();
     }
