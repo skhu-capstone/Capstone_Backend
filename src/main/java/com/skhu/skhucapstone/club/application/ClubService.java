@@ -4,9 +4,11 @@ import com.skhu.skhucapstone.club.api.dto.Request.ClubCreateRequest;
 import com.skhu.skhucapstone.club.api.dto.Response.ClubResponse;
 import com.skhu.skhucapstone.club.domain.Club;
 import com.skhu.skhucapstone.club.domain.repository.ClubRepository;
+import com.skhu.skhucapstone.common.file.ImageUploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -16,6 +18,7 @@ import java.util.List;
 public class ClubService {
 
     private final ClubRepository clubRepository;
+    private final ImageUploadService imageUploadService;
 
     @Transactional
     public ClubResponse createClub(ClubCreateRequest request) {
@@ -71,6 +74,20 @@ public class ClubService {
         club.reject();
 
         return ClubResponse.from(club);
+    }
+
+    @Transactional
+    public String uploadClubImage(Long clubId, MultipartFile file) {
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 동아리를 찾을 수 없습니다. clubId = " + clubId));
+
+        if (club.getImageUrl() != null) {
+            imageUploadService.delete(club.getImageUrl());
+        }
+
+        String imageUrl = imageUploadService.upload(file);
+        club.updateImage(imageUrl);
+        return imageUrl;
     }
 
     public List<ClubResponse> getUnapprovedClubs() {

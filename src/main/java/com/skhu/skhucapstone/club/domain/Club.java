@@ -76,6 +76,11 @@ public class Club {
         this.updatedAt = LocalDateTime.now();
     }
 
+    public void updateImage(String imageUrl) {
+        this.imageUrl = imageUrl;
+        this.updatedAt = LocalDateTime.now();
+    }
+
     public void approve() {
         this.approved = true;
         this.updatedAt = LocalDateTime.now();
