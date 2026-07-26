@@ -1,5 +1,6 @@
 package com.skhu.skhucapstone.projectrecruitment.service;
 
+import com.skhu.skhucapstone.common.config.CacheConfig;
 import com.skhu.skhucapstone.common.exception.CustomException;
 import com.skhu.skhucapstone.common.exception.ErrorCode;
 import com.skhu.skhucapstone.projectrecruitment.dto.req.ProjectRecruitmentCreateReq;
@@ -16,6 +17,7 @@ import com.skhu.skhucapstone.common.file.ImageUploadService;
 import com.skhu.skhucapstone.user.entity.User;
 import com.skhu.skhucapstone.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,6 +35,7 @@ import java.time.temporal.ChronoUnit;
 public class ProjectRecruitmentService {
 
     private final ProjectRecruitmentRepository projectRecruitmentRepository;
+    private final ProjectRecruitmentCacheService projectRecruitmentCacheService;
     private final UserRepository userRepository;
     private final ImageUploadService imageUploadService;
 
@@ -103,23 +106,17 @@ public class ProjectRecruitmentService {
     }
 
     public ProjectRecruitmentDetailRes getRecruitment(Long projectRecruitmentId) {
-        ProjectRecruitment recruitment = findRecruitment(projectRecruitmentId);
+        ProjectRecruitmentDetailRes detail =
+                projectRecruitmentCacheService.getRecruitmentDetail(projectRecruitmentId);
 
-        return ProjectRecruitmentDetailRes.builder()
-                .projectRecruitmentId(recruitment.getProjectRecruitmentId())
-                .writerId(recruitment.getUser().getUserId())
-                .title(recruitment.getTitle())
-                .imageUrl(recruitment.getImageUrl())
-                .writerName(recruitment.getUser().getName())
-                .writerStack(recruitment.getWriterStack())
-                .positions(recruitment.getPositions())
-                .content(recruitment.getContent())
-                .deadline(recruitment.getDeadline())
-                .dDay(calculateDday(recruitment.getDeadline()))
-                .createdAt(recruitment.getCreatedAt())
+        // dDay는 조회 시점 기준 값이므로 캐시된 데이터에 매번 새로 계산해 붙인다.
+        return detail.toBuilder()
+                .dDay(calculateDday(detail.deadline()))
                 .build();
     }
 
+    // 수정된 내용이 캐시에 남아 오래된 데이터가 노출되지 않도록 캐시를 무효화한다.
+    @CacheEvict(cacheNames = CacheConfig.PROJECT_RECRUITMENT_CACHE, key = "#projectRecruitmentId")
     @Transactional
     public ProjectRecruitmentUpdateRes updateRecruitment(
             Long projectRecruitmentId,
@@ -153,6 +150,7 @@ public class ProjectRecruitmentService {
                 .build();
     }
 
+    @CacheEvict(cacheNames = CacheConfig.PROJECT_RECRUITMENT_CACHE, key = "#projectRecruitmentId")
     @Transactional
     public ProjectRecruitmentDeleteRes deleteRecruitment(
             Long projectRecruitmentId,
@@ -184,6 +182,8 @@ public class ProjectRecruitmentService {
         }
     }
 
+    // 이미지 업로드도 imageUrl을 변경하므로 캐시를 무효화해야 한다.
+    @CacheEvict(cacheNames = CacheConfig.PROJECT_RECRUITMENT_CACHE, key = "#projectRecruitmentId")
     @Transactional
     public String uploadRecruitmentImage(Long projectRecruitmentId, MultipartFile file) {
         ProjectRecruitment recruitment = projectRecruitmentRepository.findById(projectRecruitmentId)
