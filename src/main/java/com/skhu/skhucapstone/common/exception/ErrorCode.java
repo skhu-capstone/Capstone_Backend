@@ -34,11 +34,9 @@ public enum ErrorCode {
     COFFEECHAT_PROFILE_PRIVATE(HttpStatus.FORBIDDEN, "COFFEECHAT_PROFILE_PRIVATE", "비공개 커피챗 프로필입니다."),
 
 
-    // ClubMember
-    CLUB_MEMBER_PRESIDENT_REQUIRED(HttpStatus.BAD_REQUEST, "CLUB_MEMBER_PRESIDENT_REQUIRED", "부원 명단에는 PRESIDENT 역할이 최소 1명 이상 필요합니다."),
-    CLUB_MEMBER_DUPLICATE_USER(HttpStatus.BAD_REQUEST, "CLUB_MEMBER_DUPLICATE_USER", "요청한 부원 명단에 중복된 사용자가 있습니다."),
-    CLUB_MEMBER_ALREADY_REGISTERED(HttpStatus.CONFLICT, "CLUB_MEMBER_ALREADY_REGISTERED", "이미 해당 동아리에 등록된 사용자입니다."),
+    // Club
     CLUB_NOT_FOUND(HttpStatus.NOT_FOUND, "CLUB_NOT_FOUND", "해당 동아리를 찾을 수 없습니다."),
+    CLUB_PRESIDENT_ALREADY_EXISTS(HttpStatus.CONFLICT, "CLUB_PRESIDENT_ALREADY_EXISTS", "이미 대표로 활동 중인 동아리가 있습니다."),
 
     // Post
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "POST_NOT_FOUND", "게시글을 찾을 수 없습니다."),

@@ -4,7 +4,15 @@ import com.skhu.skhucapstone.club.api.dto.Request.ClubCreateRequest;
 import com.skhu.skhucapstone.club.api.dto.Response.ClubResponse;
 import com.skhu.skhucapstone.club.domain.Club;
 import com.skhu.skhucapstone.club.domain.repository.ClubRepository;
+import com.skhu.skhucapstone.clubmember.domain.ClubJoinStatus;
+import com.skhu.skhucapstone.clubmember.domain.ClubMember;
+import com.skhu.skhucapstone.clubmember.domain.ClubRole;
+import com.skhu.skhucapstone.clubmember.domain.repository.ClubMemberRepository;
+import com.skhu.skhucapstone.common.exception.CustomException;
+import com.skhu.skhucapstone.common.exception.ErrorCode;
 import com.skhu.skhucapstone.common.file.ImageUploadService;
+import com.skhu.skhucapstone.user.entity.User;
+import com.skhu.skhucapstone.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,10 +26,26 @@ import java.util.List;
 public class ClubService {
 
     private final ClubRepository clubRepository;
+    private final ClubMemberRepository clubMemberRepository;
+    private final UserRepository userRepository;
     private final ImageUploadService imageUploadService;
 
     @Transactional
-    public ClubResponse createClub(ClubCreateRequest request) {
+    public ClubResponse createClub(Long userId, ClubCreateRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        boolean alreadyPresident =
+                clubMemberRepository.existsByUserUserIdAndRoleAndClubJoinStatus(
+                        userId,
+                        ClubRole.PRESIDENT,
+                        ClubJoinStatus.JOINED
+                );
+
+        if (alreadyPresident) {
+            throw new CustomException(ErrorCode.CLUB_PRESIDENT_ALREADY_EXISTS);
+        }
+
         Club club = Club.builder()
                 .clubName(request.clubName())
                 .category(request.category())
@@ -34,6 +58,15 @@ public class ClubService {
                 .build();
 
         Club savedClub = clubRepository.save(club);
+
+        ClubMember president = ClubMember.builder()
+                .club(savedClub)
+                .user(user)
+                .role(ClubRole.PRESIDENT)
+                .clubJoinStatus(ClubJoinStatus.JOINED)
+                .build();
+
+        clubMemberRepository.save(president);
 
         return ClubResponse.from(savedClub);
     }

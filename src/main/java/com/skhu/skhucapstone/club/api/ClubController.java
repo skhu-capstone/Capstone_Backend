@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,54 +28,35 @@ public class ClubController {
     @PostMapping
     @Operation(
             summary = "동아리 생성",
-            description = "새로운 동아리를 생성합니다. 생성된 동아리는 별도 승인 없이 즉시 서비스에 노출됩니다."
+            description = "새로운 동아리를 생성합니다. 생성된 동아리는 별도 승인 없이 즉시 서비스에 노출되며, 생성자는 대표로 자동 등록됩니다."
     )
     public ResponseEntity<ApiResponse<ClubResponse>> createClub(
+            @AuthenticationPrincipal Long userId,
             @Valid @RequestBody ClubCreateRequest request) {
 
-        ClubResponse response = clubService.createClub(request);
+        ClubResponse response = clubService.createClub(userId, request);
 
-        return ResponseEntity.ok(
-                ApiResponse.success(
-                        SuccessCode.CLUB_CREATE_SUCCESS,
-                        response
-                )
-        );
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.CLUB_CREATE_SUCCESS, response));
     }
 
     @GetMapping
-    @Operation(
-            summary = "동아리 목록 조회",
-            description = "서비스에 등록된 전체 동아리 목록을 조회합니다."
-    )
+    @Operation(summary = "동아리 목록 조회", description = "서비스에 등록된 전체 동아리 목록을 조회합니다.")
     public ResponseEntity<ApiResponse<List<ClubResponse>>> getClubs() {
 
         List<ClubResponse> response = clubService.getClubs();
 
-        return ResponseEntity.ok(
-                ApiResponse.success(
-                        SuccessCode.CLUB_LIST_GET_SUCCESS,
-                        response
-                )
-        );
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.CLUB_LIST_GET_SUCCESS, response));
     }
 
     @GetMapping("/{clubId}")
-    @Operation(
-            summary = "동아리 상세 조회",
-            description = "동아리 ID를 이용하여 특정 동아리의 상세 정보를 조회합니다."
+    @Operation(summary = "동아리 상세 조회", description = "동아리 ID를 이용하여 특정 동아리의 상세 정보를 조회합니다."
     )
     public ResponseEntity<ApiResponse<ClubResponse>> getClub(
             @PathVariable Long clubId) {
 
         ClubResponse response = clubService.getClub(clubId);
 
-        return ResponseEntity.ok(
-                ApiResponse.success(
-                        SuccessCode.CLUB_DETAIL_GET_SUCCESS,
-                        response
-                )
-        );
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.CLUB_DETAIL_GET_SUCCESS, response));
     }
 
     @PostMapping(value = "/{clubId}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -88,11 +70,6 @@ public class ClubController {
 
         String imageUrl = clubService.uploadClubImage(clubId, file);
 
-        return ResponseEntity.ok(
-                ApiResponse.success(
-                        SuccessCode.CLUB_IMAGE_UPLOAD_SUCCESS,
-                        imageUrl
-                )
-        );
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.CLUB_IMAGE_UPLOAD_SUCCESS, imageUrl));
     }
 }
