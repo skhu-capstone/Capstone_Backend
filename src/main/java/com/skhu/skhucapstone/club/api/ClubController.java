@@ -26,8 +26,8 @@ public class ClubController {
 
     @PostMapping
     @Operation(
-            summary = "동아리 생성 신청",
-            description = "새로운 동아리 생성을 신청합니다. 승인 전까지는 서비스에 노출되지 않습니다."
+            summary = "동아리 생성",
+            description = "새로운 동아리를 생성합니다. 생성된 동아리는 별도 승인 없이 즉시 서비스에 노출됩니다."
     )
     public ResponseEntity<ApiResponse<ClubResponse>> createClub(
             @Valid @RequestBody ClubCreateRequest request) {
@@ -44,8 +44,8 @@ public class ClubController {
 
     @GetMapping
     @Operation(
-            summary = "승인 완료 동아리 목록 조회",
-            description = "최종 승인된 동아리 목록을 조회합니다."
+            summary = "동아리 목록 조회",
+            description = "서비스에 등록된 전체 동아리 목록을 조회합니다."
     )
     public ResponseEntity<ApiResponse<List<ClubResponse>>> getClubs() {
 
@@ -78,46 +78,20 @@ public class ClubController {
     }
 
     @PostMapping(value = "/{clubId}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Operation(summary = "동아리 이미지 업로드", description = "동아리 이미지를 업로드합니다.")
+    @Operation(
+            summary = "동아리 이미지 업로드",
+            description = "동아리 이미지를 업로드합니다."
+    )
     public ResponseEntity<ApiResponse<String>> uploadClubImage(
             @PathVariable Long clubId,
             @RequestPart MultipartFile file) {
+
         String imageUrl = clubService.uploadClubImage(clubId, file);
-        return ResponseEntity.ok(ApiResponse.success(SuccessCode.CLUB_IMAGE_UPLOAD_SUCCESS, imageUrl));
-    }
-
-    @PatchMapping("/{clubId}/approve")
-    @Operation(
-            summary = "동아리 승인",
-            description = "관리자가 동아리 생성 신청을 승인합니다."
-    )
-    public ResponseEntity<ApiResponse<ClubResponse>> approveClub(
-            @PathVariable Long clubId) {
-
-        ClubResponse response = clubService.approveClub(clubId);
 
         return ResponseEntity.ok(
                 ApiResponse.success(
-                        SuccessCode.CLUB_APPROVE_SUCCESS,
-                        response
-                )
-        );
-    }
-
-    @PatchMapping("/{clubId}/reject")
-    @Operation(
-            summary = "동아리 반려",
-            description = "관리자가 동아리 생성 신청을 반려합니다."
-    )
-    public ResponseEntity<ApiResponse<ClubResponse>> rejectClub(
-            @PathVariable Long clubId) {
-
-        ClubResponse response = clubService.rejectClub(clubId);
-
-        return ResponseEntity.ok(
-                ApiResponse.success(
-                        SuccessCode.CLUB_REJECT_SUCCESS,
-                        response
+                        SuccessCode.CLUB_IMAGE_UPLOAD_SUCCESS,
+                        imageUrl
                 )
         );
     }

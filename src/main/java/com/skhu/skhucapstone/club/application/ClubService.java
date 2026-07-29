@@ -39,7 +39,7 @@ public class ClubService {
     }
 
     public List<ClubResponse> getClubs() {
-        return clubRepository.findByApprovedTrue()
+        return clubRepository.findAll()
                 .stream()
                 .map(ClubResponse::from)
                 .toList();
@@ -47,31 +47,9 @@ public class ClubService {
 
     public ClubResponse getClub(Long clubId) {
         Club club = clubRepository.findById(clubId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 동아리를 찾을 수 없습니다. clubId = " + clubId));
-
-        return ClubResponse.from(club);
-    }
-
-    @Transactional
-    public ClubResponse approveClub(Long clubId) {
-        Club club = clubRepository.findById(clubId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 동아리를 찾을 수 없습니다. clubId = " + clubId));
-        if (club.isApproved()) {
-            throw new IllegalArgumentException("이미 승인 처리 된 동아리입니다. clubId = " + clubId);
-        }
-
-        club.approve();
-
-        return ClubResponse.from(club);
-    }
-
-    @Transactional
-    public ClubResponse rejectClub(Long clubId) {
-        Club club = clubRepository.findById(clubId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 동아리를 찾을 수 없습니다. clubId = " + clubId));
-
-
-        club.reject();
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "해당 ID의 동아리를 찾을 수 없습니다. clubId = " + clubId
+                ));
 
         return ClubResponse.from(club);
     }
@@ -79,7 +57,9 @@ public class ClubService {
     @Transactional
     public String uploadClubImage(Long clubId, MultipartFile file) {
         Club club = clubRepository.findById(clubId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 동아리를 찾을 수 없습니다. clubId = " + clubId));
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "해당 ID의 동아리를 찾을 수 없습니다. clubId = " + clubId
+                ));
 
         if (club.getImageUrl() != null) {
             imageUploadService.delete(club.getImageUrl());
@@ -87,13 +67,7 @@ public class ClubService {
 
         String imageUrl = imageUploadService.upload(file, "club");
         club.updateImage(imageUrl);
-        return imageUrl;
-    }
 
-    public List<ClubResponse> getUnapprovedClubs() {
-        return clubRepository.findByApprovedFalse()
-                .stream()
-                .map(ClubResponse::from)
-                .toList();
+        return imageUrl;
     }
 }

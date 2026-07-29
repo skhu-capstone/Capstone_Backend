@@ -14,7 +14,6 @@ public record ClubResponse(
         String regularMeetingTime,
         String activityLocation,
         String contact,
-        Boolean isApproved,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
@@ -29,7 +28,6 @@ public record ClubResponse(
                 club.getRegularMeetingTime(),
                 club.getActivityLocation(),
                 club.getContact(),
-                club.isApproved(),
                 club.getCreatedAt(),
                 club.getUpdatedAt()
         );
