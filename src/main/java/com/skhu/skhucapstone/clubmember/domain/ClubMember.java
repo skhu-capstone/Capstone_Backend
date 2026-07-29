@@ -39,6 +39,12 @@ public class ClubMember {
     @Column(name = "club_join_status", nullable = false)
     private ClubJoinStatus clubJoinStatus;
 
+    @Column(name = "join_message", length = 500)
+    private String joinMessage;
+
+    @Column(name = "requested_at")
+    private LocalDateTime requestedAt;
+
     @Column(name = "joined_at")
     private LocalDateTime joinedAt;
 
@@ -57,14 +63,52 @@ public class ClubMember {
     private User user;
 
     @Builder
-    public ClubMember(Club club, User user, ClubRole role) {
+    public ClubMember(
+            Club club,
+            User user,
+            ClubRole role,
+            ClubJoinStatus clubJoinStatus,
+            String joinMessage
+    ) {
+        LocalDateTime now = LocalDateTime.now();
+
         this.club = club;
         this.user = user;
         this.role = role;
+        this.clubJoinStatus = clubJoinStatus;
+        this.joinMessage = joinMessage;
+        this.requestedAt = clubJoinStatus == ClubJoinStatus.PENDING
+                ? now
+                : null;
+        this.joinedAt = clubJoinStatus == ClubJoinStatus.JOINED
+                ? now
+                : null;
+        this.createdAt = now;
+        this.updatedAt = now;
+    }
+
+    public void approveJoin() {
+        this.role = ClubRole.MEMBER;
         this.clubJoinStatus = ClubJoinStatus.JOINED;
         this.joinedAt = LocalDateTime.now();
-        this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public void rejectJoin() {
+        this.clubJoinStatus = ClubJoinStatus.REJECTED;
+        this.joinedAt = null;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void reapply(String joinMessage) {
+        LocalDateTime now = LocalDateTime.now();
+
+        this.role = ClubRole.MEMBER;
+        this.clubJoinStatus = ClubJoinStatus.PENDING;
+        this.joinMessage = joinMessage;
+        this.requestedAt = now;
+        this.joinedAt = null;
+        this.updatedAt = now;
     }
 
     public void changeRole(ClubRole role) {
@@ -73,7 +117,8 @@ public class ClubMember {
     }
 
     public void withdraw() {
-        this.clubJoinStatus = ClubJoinStatus.NONE;
+        this.clubJoinStatus = ClubJoinStatus.WITHDRAWN;
+        this.joinedAt = null;
         this.updatedAt = LocalDateTime.now();
     }
 }
