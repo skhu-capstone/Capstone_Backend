@@ -1,6 +1,7 @@
 package com.skhu.skhucapstone.club.api;
 
 import com.skhu.skhucapstone.club.api.dto.Request.ClubCreateRequest;
+import com.skhu.skhucapstone.club.api.dto.Response.ClubPageResponse;
 import com.skhu.skhucapstone.club.api.dto.Response.ClubResponse;
 import com.skhu.skhucapstone.club.application.ClubService;
 import com.skhu.skhucapstone.common.exception.SuccessCode;
@@ -14,8 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/clubs")
@@ -36,27 +35,52 @@ public class ClubController {
 
         ClubResponse response = clubService.createClub(userId, request);
 
-        return ResponseEntity.ok(ApiResponse.success(SuccessCode.CLUB_CREATE_SUCCESS, response));
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        SuccessCode.CLUB_CREATE_SUCCESS,
+                        response
+                )
+        );
     }
 
     @GetMapping
-    @Operation(summary = "동아리 목록 조회", description = "서비스에 등록된 전체 동아리 목록을 조회합니다.")
-    public ResponseEntity<ApiResponse<List<ClubResponse>>> getClubs() {
+    @Operation(
+            summary = "동아리 목록 및 검색",
+            description = "동아리명과 카테고리를 기준으로 동아리를 검색하고 페이지 단위로 조회합니다."
+    )
+    public ResponseEntity<ApiResponse<ClubPageResponse>> getClubs(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String category,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
 
-        List<ClubResponse> response = clubService.getClubs();
+        ClubPageResponse response =
+                clubService.getClubs(keyword, category, page, size);
 
-        return ResponseEntity.ok(ApiResponse.success(SuccessCode.CLUB_LIST_GET_SUCCESS, response));
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        SuccessCode.CLUB_LIST_GET_SUCCESS,
+                        response
+                )
+        );
     }
 
     @GetMapping("/{clubId}")
-    @Operation(summary = "동아리 상세 조회", description = "동아리 ID를 이용하여 특정 동아리의 상세 정보를 조회합니다."
+    @Operation(
+            summary = "동아리 상세 조회",
+            description = "동아리 ID를 이용하여 특정 동아리의 상세 정보를 조회합니다."
     )
     public ResponseEntity<ApiResponse<ClubResponse>> getClub(
             @PathVariable Long clubId) {
 
         ClubResponse response = clubService.getClub(clubId);
 
-        return ResponseEntity.ok(ApiResponse.success(SuccessCode.CLUB_DETAIL_GET_SUCCESS, response));
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        SuccessCode.CLUB_DETAIL_GET_SUCCESS,
+                        response
+                )
+        );
     }
 
     @PostMapping(value = "/{clubId}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -70,6 +94,11 @@ public class ClubController {
 
         String imageUrl = clubService.uploadClubImage(clubId, file);
 
-        return ResponseEntity.ok(ApiResponse.success(SuccessCode.CLUB_IMAGE_UPLOAD_SUCCESS, imageUrl));
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        SuccessCode.CLUB_IMAGE_UPLOAD_SUCCESS,
+                        imageUrl
+                )
+        );
     }
 }

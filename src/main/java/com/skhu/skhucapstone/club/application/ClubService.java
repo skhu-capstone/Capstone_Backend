@@ -1,6 +1,8 @@
 package com.skhu.skhucapstone.club.application;
 
 import com.skhu.skhucapstone.club.api.dto.Request.ClubCreateRequest;
+import com.skhu.skhucapstone.club.api.dto.Response.ClubListResponse;
+import com.skhu.skhucapstone.club.api.dto.Response.ClubPageResponse;
 import com.skhu.skhucapstone.club.api.dto.Response.ClubResponse;
 import com.skhu.skhucapstone.club.domain.Club;
 import com.skhu.skhucapstone.club.domain.repository.ClubRepository;
@@ -14,11 +16,12 @@ import com.skhu.skhucapstone.common.file.ImageUploadService;
 import com.skhu.skhucapstone.user.entity.User;
 import com.skhu.skhucapstone.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -71,11 +74,40 @@ public class ClubService {
         return ClubResponse.from(savedClub);
     }
 
-    public List<ClubResponse> getClubs() {
-        return clubRepository.findAll()
-                .stream()
-                .map(ClubResponse::from)
-                .toList();
+    public ClubPageResponse getClubs(
+            String keyword,
+            String category,
+            int page,
+            int size
+    ) {
+        validateSearchCondition(page, size);
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        String searchKeyword = (keyword == null || keyword.isBlank())
+                ? null
+                : keyword;
+
+        String searchCategory = (category == null || category.isBlank())
+                ? null
+                : category;
+
+        Page<Club> clubs = clubRepository.searchClubs(
+                searchKeyword,
+                searchCategory,
+                pageable
+        );
+
+        return ClubPageResponse.builder()
+                .content(clubs.getContent()
+                        .stream()
+                        .map(ClubListResponse::from)
+                        .toList())
+                .page(clubs.getNumber())
+                .size(clubs.getSize())
+                .totalElements(clubs.getTotalElements())
+                .totalPages(clubs.getTotalPages())
+                .build();
     }
 
     public ClubResponse getClub(Long clubId) {
@@ -102,5 +134,11 @@ public class ClubService {
         club.updateImage(imageUrl);
 
         return imageUrl;
+    }
+
+    private void validateSearchCondition(int page, int size) {
+        if (page < 0 || size < 1) {
+            throw new CustomException(ErrorCode.INVALID_SEARCH_CONDITION);
+        }
     }
 }
