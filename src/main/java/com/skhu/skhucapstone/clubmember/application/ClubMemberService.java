@@ -2,17 +2,24 @@ package com.skhu.skhucapstone.clubmember.application;
 
 import com.skhu.skhucapstone.club.domain.Club;
 import com.skhu.skhucapstone.club.domain.repository.ClubRepository;
+import com.skhu.skhucapstone.clubmember.api.dto.request.ClubJoinRequest;
+import com.skhu.skhucapstone.clubmember.api.dto.response.ClubJoinResponse;
 import com.skhu.skhucapstone.clubmember.api.dto.response.ClubMemberListResponse;
 import com.skhu.skhucapstone.clubmember.api.dto.response.MyClubResponse;
 import com.skhu.skhucapstone.clubmember.domain.ClubJoinStatus;
+import com.skhu.skhucapstone.clubmember.domain.ClubMember;
+import com.skhu.skhucapstone.clubmember.domain.ClubRole;
 import com.skhu.skhucapstone.clubmember.domain.repository.ClubMemberRepository;
 import com.skhu.skhucapstone.common.exception.CustomException;
 import com.skhu.skhucapstone.common.exception.ErrorCode;
+import com.skhu.skhucapstone.user.entity.User;
+import com.skhu.skhucapstone.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +28,57 @@ public class ClubMemberService {
 
     private final ClubRepository clubRepository;
     private final ClubMemberRepository clubMemberRepository;
+    private final UserRepository userRepository;
+
+    @Transactional
+    public ClubJoinResponse requestJoin(
+            Long clubId,
+            Long userId,
+            ClubJoinRequest request
+    ) {
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new CustomException(ErrorCode.CLUB_NOT_FOUND));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        Optional<ClubMember> existingClubMember =
+                clubMemberRepository.findByClubAndUser(club, user);
+
+        ClubMember clubMember;
+
+        if (existingClubMember.isEmpty()) {
+            clubMember = ClubMember.builder()
+                    .club(club)
+                    .user(user)
+                    .role(ClubRole.MEMBER)
+                    .clubJoinStatus(ClubJoinStatus.PENDING)
+                    .joinMessage(request.joinMessage())
+                    .build();
+
+            clubMemberRepository.save(clubMember);
+        } else {
+            clubMember = existingClubMember.get();
+
+            if (clubMember.getClubJoinStatus() == ClubJoinStatus.PENDING) {
+                throw new CustomException(ErrorCode.CLUB_JOIN_ALREADY_PENDING);
+            }
+
+            if (clubMember.getClubJoinStatus() == ClubJoinStatus.JOINED) {
+                throw new CustomException(ErrorCode.CLUB_MEMBER_ALREADY_JOINED);
+            }
+
+            clubMember.reapply(request.joinMessage());
+        }
+
+        return ClubJoinResponse.builder()
+                .clubId(club.getId())
+                .userId(user.getUserId())
+                .joinMessage(clubMember.getJoinMessage())
+                .clubJoinStatus(clubMember.getClubJoinStatus())
+                .requestedAt(clubMember.getRequestedAt())
+                .build();
+    }
 
     public List<ClubMemberListResponse> getClubMembers(Long clubId) {
         Club club = clubRepository.findById(clubId)
