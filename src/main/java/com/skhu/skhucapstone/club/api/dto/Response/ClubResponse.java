@@ -14,10 +14,11 @@ public record ClubResponse(
         String regularMeetingTime,
         String activityLocation,
         String contact,
+        long memberCount,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
-    public static ClubResponse from(Club club) {
+    public static ClubResponse from(Club club, long memberCount) {
         return new ClubResponse(
                 club.getId(),
                 club.getClubName(),
@@ -28,6 +29,7 @@ public record ClubResponse(
                 club.getRegularMeetingTime(),
                 club.getActivityLocation(),
                 club.getContact(),
+                memberCount,
                 club.getCreatedAt(),
                 club.getUpdatedAt()
         );

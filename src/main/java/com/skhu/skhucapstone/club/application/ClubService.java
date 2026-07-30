@@ -71,7 +71,7 @@ public class ClubService {
 
         clubMemberRepository.save(president);
 
-        return ClubResponse.from(savedClub);
+        return ClubResponse.from(savedClub, 1L);
     }
 
     public ClubPageResponse getClubs(
@@ -112,11 +112,15 @@ public class ClubService {
 
     public ClubResponse getClub(Long clubId) {
         Club club = clubRepository.findById(clubId)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "해당 ID의 동아리를 찾을 수 없습니다. clubId = " + clubId
-                ));
+                .orElseThrow(() -> new CustomException(ErrorCode.CLUB_NOT_FOUND));
 
-        return ClubResponse.from(club);
+        long memberCount =
+                clubMemberRepository.countByClubAndClubJoinStatus(
+                        club,
+                        ClubJoinStatus.JOINED
+                );
+
+        return ClubResponse.from(club, memberCount);
     }
 
     @Transactional
