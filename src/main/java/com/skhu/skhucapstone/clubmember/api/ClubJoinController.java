@@ -1,6 +1,7 @@
 package com.skhu.skhucapstone.clubmember.api;
 
 import com.skhu.skhucapstone.clubmember.api.dto.request.ClubJoinRequest;
+import com.skhu.skhucapstone.clubmember.api.dto.response.ClubJoinCancelResponse;
 import com.skhu.skhucapstone.clubmember.api.dto.response.ClubJoinResponse;
 import com.skhu.skhucapstone.clubmember.application.ClubMemberService;
 import com.skhu.skhucapstone.common.exception.SuccessCode;
@@ -11,6 +12,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,6 +40,31 @@ public class ClubJoinController {
         ClubJoinResponse response =
                 clubMemberService.requestJoin(clubId, userId, request);
 
-        return ResponseEntity.ok(ApiResponse.success(SuccessCode.CLUB_JOIN_REQUEST_SUCCESS, response));
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        SuccessCode.CLUB_JOIN_REQUEST_SUCCESS,
+                        response
+                )
+        );
+    }
+
+    @DeleteMapping("/me")
+    @Operation(
+            summary = "동아리 가입 신청 취소",
+            description = "로그인한 사용자가 가입 대기 중인 자신의 동아리 가입 신청을 취소합니다."
+    )
+    public ResponseEntity<ApiResponse<ClubJoinCancelResponse>> cancelJoin(
+            @PathVariable Long clubId,
+            @AuthenticationPrincipal Long userId) {
+
+        ClubJoinCancelResponse response =
+                clubMemberService.cancelJoin(clubId, userId);
+
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        SuccessCode.CLUB_JOIN_CANCEL_SUCCESS,
+                        response
+                )
+        );
     }
 }

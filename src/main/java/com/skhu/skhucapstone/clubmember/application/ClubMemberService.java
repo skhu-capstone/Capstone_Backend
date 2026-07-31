@@ -3,6 +3,7 @@ package com.skhu.skhucapstone.clubmember.application;
 import com.skhu.skhucapstone.club.domain.Club;
 import com.skhu.skhucapstone.club.domain.repository.ClubRepository;
 import com.skhu.skhucapstone.clubmember.api.dto.request.ClubJoinRequest;
+import com.skhu.skhucapstone.clubmember.api.dto.response.ClubJoinCancelResponse;
 import com.skhu.skhucapstone.clubmember.api.dto.response.ClubJoinResponse;
 import com.skhu.skhucapstone.clubmember.api.dto.response.ClubMemberListResponse;
 import com.skhu.skhucapstone.clubmember.api.dto.response.MyClubResponse;
@@ -77,6 +78,35 @@ public class ClubMemberService {
                 .joinMessage(clubMember.getJoinMessage())
                 .clubJoinStatus(clubMember.getClubJoinStatus())
                 .requestedAt(clubMember.getRequestedAt())
+                .build();
+    }
+
+    @Transactional
+    public ClubJoinCancelResponse cancelJoin(
+            Long clubId,
+            Long userId
+    ) {
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new CustomException(ErrorCode.CLUB_NOT_FOUND));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        ClubMember clubMember = clubMemberRepository.findByClubAndUser(club, user)
+                .orElseThrow(() -> new CustomException(
+                        ErrorCode.CLUB_JOIN_REQUEST_NOT_FOUND
+                ));
+
+        if (clubMember.getClubJoinStatus() != ClubJoinStatus.PENDING) {
+            throw new CustomException(ErrorCode.CLUB_JOIN_CANCEL_NOT_ALLOWED);
+        }
+
+        clubMember.withdraw();
+
+        return ClubJoinCancelResponse.builder()
+                .clubId(club.getId())
+                .userId(user.getUserId())
+                .clubJoinStatus(clubMember.getClubJoinStatus())
                 .build();
     }
 

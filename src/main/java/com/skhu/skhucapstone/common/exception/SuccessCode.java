@@ -51,6 +51,7 @@ public enum SuccessCode {
     // ClubMember
     CLUB_MEMBER_LIST_GET_SUCCESS(HttpStatus.OK, "CLUB_MEMBER_LIST_GET_SUCCESS", "동아리 멤버 목록 조회가 완료되었습니다."),
     CLUB_JOIN_REQUEST_SUCCESS(HttpStatus.OK, "CLUB_JOIN_REQUEST_SUCCESS", "동아리 가입 신청이 완료되었습니다."),
+    CLUB_JOIN_CANCEL_SUCCESS(HttpStatus.OK, "CLUB_JOIN_CANCEL_SUCCESS", "동아리 가입 신청이 취소되었습니다."),
 
     //Main
     MAIN_GET_SUCCESS(HttpStatus.OK, "MAIN_GET_SUCCESS", "메인페이지 조회가 완료되었습니다."),
