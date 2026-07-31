@@ -1,5 +1,6 @@
 package com.skhu.skhucapstone.clubmember.api;
 
+import com.skhu.skhucapstone.clubmember.api.dto.response.MyClubJoinResponse;
 import com.skhu.skhucapstone.clubmember.api.dto.response.MyClubResponse;
 import com.skhu.skhucapstone.clubmember.application.ClubMemberService;
 import com.skhu.skhucapstone.common.exception.SuccessCode;
@@ -26,16 +27,36 @@ public class MyClubController {
     @GetMapping("/clubs")
     @Operation(
             summary = "내 소속 동아리 조회",
-            description = "로그인한 사용자가 가입한 동아리 목록과 각 동아리에서의 역할(MEMBER, STAFF, PRESIDENT)을 조회합니다."
+            description = "로그인한 사용자가 가입한 동아리 목록을 조회합니다."
     )
     public ResponseEntity<ApiResponse<List<MyClubResponse>>> getMyClubs(
             @AuthenticationPrincipal Long userId) {
 
-        List<MyClubResponse> response = clubMemberService.getMyClubs(userId);
+        List<MyClubResponse> response =
+                clubMemberService.getMyClubs(userId);
 
         return ResponseEntity.ok(
                 ApiResponse.success(
                         SuccessCode.MY_CLUB_LIST_GET_SUCCESS,
+                        response
+                )
+        );
+    }
+
+    @GetMapping("/club/join")
+    @Operation(
+            summary = "내 동아리 가입 신청 목록 조회",
+            description = "로그인한 사용자의 가입 대기, 거절, 취소된 동아리 신청 목록을 최근 신청 순으로 조회합니다."
+    )
+    public ResponseEntity<ApiResponse<List<MyClubJoinResponse>>> getMyClubJoins(
+            @AuthenticationPrincipal Long userId) {
+
+        List<MyClubJoinResponse> response =
+                clubMemberService.getMyClubJoins(userId);
+
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        SuccessCode.MY_CLUB_JOIN_LIST_GET_SUCCESS,
                         response
                 )
         );

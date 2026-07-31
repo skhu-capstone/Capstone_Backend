@@ -18,6 +18,7 @@ import com.skhu.skhucapstone.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.skhu.skhucapstone.clubmember.api.dto.response.MyClubJoinResponse;
 
 import java.util.List;
 import java.util.Optional;
@@ -141,6 +142,25 @@ public class ClubMemberService {
                         .clubName(clubMember.getClub().getClubName())
                         .imageUrl(clubMember.getClub().getImageUrl())
                         .category(clubMember.getClub().getCategory())
+                        .build())
+                .toList();
+    }
+
+    public List<MyClubJoinResponse> getMyClubJoins(Long userId) {
+        return clubMemberRepository
+                .findByUserUserIdAndClubJoinStatusNotOrderByRequestedAtDesc(
+                        userId,
+                        ClubJoinStatus.JOINED
+                )
+                .stream()
+                .map(clubMember -> MyClubJoinResponse.builder()
+                        .clubId(clubMember.getClub().getId())
+                        .clubName(clubMember.getClub().getClubName())
+                        .category(clubMember.getClub().getCategory())
+                        .imageUrl(clubMember.getClub().getImageUrl())
+                        .joinMessage(clubMember.getJoinMessage())
+                        .clubJoinStatus(clubMember.getClubJoinStatus())
+                        .requestedAt(clubMember.getRequestedAt())
                         .build())
                 .toList();
     }
