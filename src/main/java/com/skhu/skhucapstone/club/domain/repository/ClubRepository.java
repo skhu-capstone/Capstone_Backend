@@ -17,6 +17,5 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
             OR c.category = :category)
         ORDER BY c.createdAt DESC
         """)
-    Page<Club> searchClubs(@Param("keyword") String keyword, @Param("category") String category, Pageable pageable
-    );
+    Page<Club> searchClubs(@Param("keyword") String keyword, @Param("category") String category, Pageable pageable);
 }

@@ -37,15 +37,9 @@ public class ClubJoinController {
             @AuthenticationPrincipal Long userId,
             @Valid @RequestBody ClubJoinRequest request) {
 
-        ClubJoinResponse response =
-                clubMemberService.requestJoin(clubId, userId, request);
+        ClubJoinResponse response = clubMemberService.requestJoin(clubId, userId, request);
 
-        return ResponseEntity.ok(
-                ApiResponse.success(
-                        SuccessCode.CLUB_JOIN_REQUEST_SUCCESS,
-                        response
-                )
-        );
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.CLUB_JOIN_REQUEST_SUCCESS, response));
     }
 
     @DeleteMapping("/me")
@@ -57,14 +51,8 @@ public class ClubJoinController {
             @PathVariable Long clubId,
             @AuthenticationPrincipal Long userId) {
 
-        ClubJoinCancelResponse response =
-                clubMemberService.cancelJoin(clubId, userId);
+        ClubJoinCancelResponse response = clubMemberService.cancelJoin(clubId, userId);
 
-        return ResponseEntity.ok(
-                ApiResponse.success(
-                        SuccessCode.CLUB_JOIN_CANCEL_SUCCESS,
-                        response
-                )
-        );
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.CLUB_JOIN_CANCEL_SUCCESS, response));
     }
 }

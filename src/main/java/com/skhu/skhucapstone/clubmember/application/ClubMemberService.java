@@ -38,14 +38,11 @@ public class ClubMemberService {
             Long userId,
             ClubJoinRequest request
     ) {
-        Club club = clubRepository.findById(clubId)
-                .orElseThrow(() -> new CustomException(ErrorCode.CLUB_NOT_FOUND));
+        Club club = clubRepository.findById(clubId).orElseThrow(() -> new CustomException(ErrorCode.CLUB_NOT_FOUND));
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        Optional<ClubMember> existingClubMember =
-                clubMemberRepository.findByClubAndUser(club, user);
+        Optional<ClubMember> existingClubMember = clubMemberRepository.findByClubAndUser(club, user);
 
         ClubMember clubMember;
 
@@ -87,16 +84,12 @@ public class ClubMemberService {
             Long clubId,
             Long userId
     ) {
-        Club club = clubRepository.findById(clubId)
-                .orElseThrow(() -> new CustomException(ErrorCode.CLUB_NOT_FOUND));
+        Club club = clubRepository.findById(clubId).orElseThrow(() -> new CustomException(ErrorCode.CLUB_NOT_FOUND));
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        ClubMember clubMember = clubMemberRepository.findByClubAndUser(club, user)
-                .orElseThrow(() -> new CustomException(
-                        ErrorCode.CLUB_JOIN_REQUEST_NOT_FOUND
-                ));
+        ClubMember clubMember = clubMemberRepository.findByClubAndUser(club, user).orElseThrow(()
+                -> new CustomException(ErrorCode.CLUB_JOIN_REQUEST_NOT_FOUND));
 
         if (clubMember.getClubJoinStatus() != ClubJoinStatus.PENDING) {
             throw new CustomException(ErrorCode.CLUB_JOIN_CANCEL_NOT_ALLOWED);
@@ -112,8 +105,7 @@ public class ClubMemberService {
     }
 
     public List<ClubMemberListResponse> getClubMembers(Long clubId) {
-        Club club = clubRepository.findById(clubId)
-                .orElseThrow(() -> new CustomException(ErrorCode.CLUB_NOT_FOUND));
+        Club club = clubRepository.findById(clubId).orElseThrow(() -> new CustomException(ErrorCode.CLUB_NOT_FOUND));
 
         return clubMemberRepository
                 .findByClubAndClubJoinStatus(

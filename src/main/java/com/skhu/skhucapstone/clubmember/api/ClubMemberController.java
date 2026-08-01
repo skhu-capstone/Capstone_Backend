@@ -31,14 +31,8 @@ public class ClubMemberController {
     public ResponseEntity<ApiResponse<List<ClubMemberListResponse>>> getClubMembers(
             @PathVariable Long clubId) {
 
-        List<ClubMemberListResponse> response =
-                clubMemberService.getClubMembers(clubId);
+        List<ClubMemberListResponse> response = clubMemberService.getClubMembers(clubId);
 
-        return ResponseEntity.ok(
-                ApiResponse.success(
-                        SuccessCode.CLUB_MEMBER_LIST_GET_SUCCESS,
-                        response
-                )
-        );
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.CLUB_MEMBER_LIST_GET_SUCCESS, response));
     }
 }

@@ -29,18 +29,12 @@ public class ClubController {
             summary = "동아리 생성",
             description = "새로운 동아리를 생성합니다. 생성된 동아리는 별도 승인 없이 즉시 서비스에 노출되며, 생성자는 대표로 자동 등록됩니다."
     )
-    public ResponseEntity<ApiResponse<ClubResponse>> createClub(
-            @AuthenticationPrincipal Long userId,
-            @Valid @RequestBody ClubCreateRequest request) {
+    public ResponseEntity<ApiResponse<ClubResponse>> createClub
+            (@AuthenticationPrincipal Long userId,
+             @Valid @RequestBody ClubCreateRequest request) {
 
         ClubResponse response = clubService.createClub(userId, request);
-
-        return ResponseEntity.ok(
-                ApiResponse.success(
-                        SuccessCode.CLUB_CREATE_SUCCESS,
-                        response
-                )
-        );
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.CLUB_CREATE_SUCCESS, response));
     }
 
     @GetMapping
@@ -54,15 +48,9 @@ public class ClubController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        ClubPageResponse response =
-                clubService.getClubs(keyword, category, page, size);
+        ClubPageResponse response = clubService.getClubs(keyword, category, page, size);
 
-        return ResponseEntity.ok(
-                ApiResponse.success(
-                        SuccessCode.CLUB_LIST_GET_SUCCESS,
-                        response
-                )
-        );
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.CLUB_LIST_GET_SUCCESS, response));
     }
 
     @GetMapping("/{clubId}")
@@ -70,17 +58,11 @@ public class ClubController {
             summary = "동아리 상세 조회",
             description = "동아리 ID를 이용하여 특정 동아리의 상세 정보를 조회합니다."
     )
-    public ResponseEntity<ApiResponse<ClubResponse>> getClub(
-            @PathVariable Long clubId) {
+    public ResponseEntity<ApiResponse<ClubResponse>> getClub(@PathVariable Long clubId) {
 
         ClubResponse response = clubService.getClub(clubId);
 
-        return ResponseEntity.ok(
-                ApiResponse.success(
-                        SuccessCode.CLUB_DETAIL_GET_SUCCESS,
-                        response
-                )
-        );
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.CLUB_DETAIL_GET_SUCCESS, response));
     }
 
     @PostMapping(value = "/{clubId}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -88,17 +70,10 @@ public class ClubController {
             summary = "동아리 이미지 업로드",
             description = "동아리 이미지를 업로드합니다."
     )
-    public ResponseEntity<ApiResponse<String>> uploadClubImage(
-            @PathVariable Long clubId,
-            @RequestPart MultipartFile file) {
+    public ResponseEntity<ApiResponse<String>> uploadClubImage(@PathVariable Long clubId, @RequestPart MultipartFile file) {
 
         String imageUrl = clubService.uploadClubImage(clubId, file);
 
-        return ResponseEntity.ok(
-                ApiResponse.success(
-                        SuccessCode.CLUB_IMAGE_UPLOAD_SUCCESS,
-                        imageUrl
-                )
-        );
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.CLUB_IMAGE_UPLOAD_SUCCESS, imageUrl));
     }
 }
