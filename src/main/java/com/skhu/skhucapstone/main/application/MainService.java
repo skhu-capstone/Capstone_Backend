@@ -4,7 +4,11 @@ import com.skhu.skhucapstone.clubcollaboration.api.dto.response.ClubCollabRespon
 import com.skhu.skhucapstone.clubcollaboration.application.ClubCollabService;
 import com.skhu.skhucapstone.coffeechat.dto.res.CoffeeChatProfileListItemRes;
 import com.skhu.skhucapstone.coffeechat.service.CoffeeChatService;
-import com.skhu.skhucapstone.main.api.dto.response.*;
+import com.skhu.skhucapstone.main.api.dto.response.ClubCollabRes;
+import com.skhu.skhucapstone.main.api.dto.response.ClubFeedRes;
+import com.skhu.skhucapstone.main.api.dto.response.CoffeeChatRes;
+import com.skhu.skhucapstone.main.api.dto.response.MainResponse;
+import com.skhu.skhucapstone.main.api.dto.response.ProjectRecruitRes;
 import com.skhu.skhucapstone.post.api.dto.response.PostResponse;
 import com.skhu.skhucapstone.post.application.PostService;
 import com.skhu.skhucapstone.projectrecruitment.dto.res.ProjectRecruitmentListRes;
@@ -66,7 +70,9 @@ public class MainService {
                 .toList();
     }
 
-    private CoffeeChatRes toCoffeeChatRes(CoffeeChatProfileListItemRes profile) {
+    private CoffeeChatRes toCoffeeChatRes(
+            CoffeeChatProfileListItemRes profile
+    ) {
         return CoffeeChatRes.builder()
                 .coffeeChatProfileId(profile.getCoffeeChatProfileId())
                 .userId(profile.getUserId())
@@ -79,9 +85,13 @@ public class MainService {
                 .build();
     }
 
-    private ProjectRecruitRes toProjectRecruitRes(ProjectRecruitmentListRes recruitment) {
+    private ProjectRecruitRes toProjectRecruitRes(
+            ProjectRecruitmentListRes recruitment
+    ) {
         return ProjectRecruitRes.builder()
-                .projectRecruitmentId(recruitment.getProjectRecruitmentId())
+                .projectRecruitmentId(
+                        recruitment.getProjectRecruitmentId()
+                )
                 .title(recruitment.getTitle())
                 .content(recruitment.getContent())
                 .imageUrl(recruitment.getImageUrl())
@@ -90,7 +100,9 @@ public class MainService {
                 .build();
     }
 
-    private ClubCollabRes toClubCollabRes(ClubCollabResponse collab) {
+    private ClubCollabRes toClubCollabRes(
+            ClubCollabResponse collab
+    ) {
         return ClubCollabRes.builder()
                 .collabId(collab.getCollabId())
                 .title(collab.getTitle())
@@ -100,7 +112,9 @@ public class MainService {
                 .build();
     }
 
-    private ClubFeedRes toClubFeedRes(PostResponse post) {
+    private ClubFeedRes toClubFeedRes(
+            PostResponse post
+    ) {
         return ClubFeedRes.builder()
                 .clubName(post.getClubName())
                 .postId(post.getPostId())
@@ -108,6 +122,8 @@ public class MainService {
                 .createdAt(post.getCreatedAt())
                 .imageUrls(post.getImageUrls())
                 .content(post.getContent())
+                .likeCount(post.getLikeCount())
+                .liked(post.isLiked())
                 .build();
     }
 }
