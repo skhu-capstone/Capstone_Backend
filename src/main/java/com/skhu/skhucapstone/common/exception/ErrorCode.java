@@ -44,6 +44,9 @@ public enum ErrorCode {
     CLUB_JOIN_REQUEST_NOT_FOUND(HttpStatus.NOT_FOUND, "CLUB_JOIN_REQUEST_NOT_FOUND", "동아리 가입 신청 내역을 찾을 수 없습니다."),
     CLUB_JOIN_CANCEL_NOT_ALLOWED(HttpStatus.CONFLICT, "CLUB_JOIN_CANCEL_NOT_ALLOWED", "가입 대기 중인 신청만 취소할 수 있습니다."),
     CLUB_JOIN_LIST_FORBIDDEN(HttpStatus.FORBIDDEN, "CLUB_JOIN_LIST_FORBIDDEN", "동아리 가입 신청자 목록을 조회할 권한이 없습니다."),
+    CLUB_JOIN_MANAGE_FORBIDDEN(HttpStatus.FORBIDDEN, "CLUB_JOIN_MANAGE_FORBIDDEN", "동아리 가입 신청을 처리할 권한이 없습니다."),
+    CLUB_JOIN_APPLICANT_NOT_FOUND(HttpStatus.NOT_FOUND, "CLUB_JOIN_APPLICANT_NOT_FOUND", "해당 사용자의 가입 신청 내역을 찾을 수 없습니다."),
+    CLUB_JOIN_NOT_PENDING(HttpStatus.CONFLICT, "CLUB_JOIN_NOT_PENDING", "가입 대기 중인 신청만 승인하거나 거절할 수 있습니다."),
 
     // Post
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "POST_NOT_FOUND", "게시글을 찾을 수 없습니다."),

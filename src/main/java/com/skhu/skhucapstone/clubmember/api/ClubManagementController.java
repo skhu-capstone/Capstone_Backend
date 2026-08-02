@@ -1,6 +1,7 @@
 package com.skhu.skhucapstone.clubmember.api;
 
 import com.skhu.skhucapstone.clubmember.api.dto.response.ClubJoinApplicantResponse;
+import com.skhu.skhucapstone.clubmember.api.dto.response.ClubJoinProcessResponse;
 import com.skhu.skhucapstone.clubmember.application.ClubManagementService;
 import com.skhu.skhucapstone.common.exception.SuccessCode;
 import com.skhu.skhucapstone.common.response.ApiResponse;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,6 +41,56 @@ public class ClubManagementController {
         return ResponseEntity.ok(
                 ApiResponse.success(
                         SuccessCode.CLUB_JOIN_LIST_GET_SUCCESS,
+                        response
+                )
+        );
+    }
+
+    @PatchMapping("/join/{applicantUserId}/approve")
+    @Operation(
+            summary = "동아리 가입 신청 승인",
+            description = "동아리 대표가 가입 대기 중인 사용자의 가입 신청을 승인합니다."
+    )
+    public ResponseEntity<ApiResponse<ClubJoinProcessResponse>> approveJoin(
+            @PathVariable Long clubId,
+            @PathVariable Long applicantUserId,
+            @AuthenticationPrincipal Long managerUserId) {
+
+        ClubJoinProcessResponse response =
+                clubManagementService.approveJoin(
+                        clubId,
+                        applicantUserId,
+                        managerUserId
+                );
+
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        SuccessCode.CLUB_JOIN_APPROVE_SUCCESS,
+                        response
+                )
+        );
+    }
+
+    @PatchMapping("/join/{applicantUserId}/reject")
+    @Operation(
+            summary = "동아리 가입 신청 거절",
+            description = "동아리 대표가 가입 대기 중인 사용자의 가입 신청을 거절합니다."
+    )
+    public ResponseEntity<ApiResponse<ClubJoinProcessResponse>> rejectJoin(
+            @PathVariable Long clubId,
+            @PathVariable Long applicantUserId,
+            @AuthenticationPrincipal Long managerUserId) {
+
+        ClubJoinProcessResponse response =
+                clubManagementService.rejectJoin(
+                        clubId,
+                        applicantUserId,
+                        managerUserId
+                );
+
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        SuccessCode.CLUB_JOIN_REJECT_SUCCESS,
                         response
                 )
         );
