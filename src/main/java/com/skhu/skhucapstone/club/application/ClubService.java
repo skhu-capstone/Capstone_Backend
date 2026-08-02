@@ -35,26 +35,19 @@ public class ClubService {
     private final ImageUploadService imageUploadService;
 
     @Transactional
-    public ClubResponse createClub(
-            Long userId,
-            ClubCreateRequest request
-    ) {
+    public ClubResponse createClub(Long userId, ClubCreateRequest request) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(
-                        ErrorCode.USER_NOT_FOUND
-                ));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        boolean alreadyPresident =
-                clubMemberRepository.existsByUserUserIdAndRoleAndClubJoinStatus(
+        boolean alreadyPresident = clubMemberRepository
+                .existsByUserUserIdAndRoleAndClubJoinStatus(
                         userId,
                         ClubRole.PRESIDENT,
                         ClubJoinStatus.JOINED
                 );
 
         if (alreadyPresident) {
-            throw new CustomException(
-                    ErrorCode.CLUB_PRESIDENT_ALREADY_EXISTS
-            );
+            throw new CustomException(ErrorCode.CLUB_PRESIDENT_ALREADY_EXISTS);
         }
 
         Club club = Club.builder()
@@ -121,11 +114,10 @@ public class ClubService {
     public ClubResponse getClub(Long clubId) {
         Club club = findClub(clubId);
 
-        long memberCount =
-                clubMemberRepository.countByClubAndClubJoinStatus(
-                        club,
-                        ClubJoinStatus.JOINED
-                );
+        long memberCount = clubMemberRepository.countByClubAndClubJoinStatus(
+                club,
+                ClubJoinStatus.JOINED
+        );
 
         return ClubResponse.from(club, memberCount);
     }
@@ -152,11 +144,10 @@ public class ClubService {
                 request.contact()
         );
 
-        long memberCount =
-                clubMemberRepository.countByClubAndClubJoinStatus(
-                        club,
-                        ClubJoinStatus.JOINED
-                );
+        long memberCount = clubMemberRepository.countByClubAndClubJoinStatus(
+                club,
+                ClubJoinStatus.JOINED
+        );
 
         return ClubResponse.from(club, memberCount);
     }
@@ -184,50 +175,32 @@ public class ClubService {
 
     private Club findClub(Long clubId) {
         return clubRepository.findById(clubId)
-                .orElseThrow(() -> new CustomException(
-                        ErrorCode.CLUB_NOT_FOUND
-                ));
+                .orElseThrow(() -> new CustomException(ErrorCode.CLUB_NOT_FOUND));
     }
 
     private User findUser(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(
-                        ErrorCode.USER_NOT_FOUND
-                ));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
 
-    private void validateClubManagePermission(
-            Club club,
-            User user
-    ) {
-        ClubMember clubMember =
-                clubMemberRepository.findByClubAndUser(club, user)
-                        .orElseThrow(() -> new CustomException(
-                                ErrorCode.CLUB_MANAGE_FORBIDDEN
-                        ));
+    private void validateClubManagePermission(Club club, User user) {
+        ClubMember clubMember = clubMemberRepository.findByClubAndUser(club, user)
+                .orElseThrow(() -> new CustomException(
+                        ErrorCode.CLUB_MANAGE_FORBIDDEN
+                ));
 
-        boolean joined =
-                clubMember.getClubJoinStatus() == ClubJoinStatus.JOINED;
-
-        boolean manager =
-                clubMember.getRole() == ClubRole.PRESIDENT
-                        || clubMember.getRole() == ClubRole.STAFF;
+        boolean joined = clubMember.getClubJoinStatus() == ClubJoinStatus.JOINED;
+        boolean manager = clubMember.getRole() == ClubRole.PRESIDENT
+                || clubMember.getRole() == ClubRole.STAFF;
 
         if (!joined || !manager) {
-            throw new CustomException(
-                    ErrorCode.CLUB_MANAGE_FORBIDDEN
-            );
+            throw new CustomException(ErrorCode.CLUB_MANAGE_FORBIDDEN);
         }
     }
 
-    private void validateSearchCondition(
-            int page,
-            int size
-    ) {
+    private void validateSearchCondition(int page, int size) {
         if (page < 0 || size < 1) {
-            throw new CustomException(
-                    ErrorCode.INVALID_SEARCH_CONDITION
-            );
+            throw new CustomException(ErrorCode.INVALID_SEARCH_CONDITION);
         }
     }
 }

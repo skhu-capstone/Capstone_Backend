@@ -37,15 +37,9 @@ public class ClubManagementController {
             @PathVariable Long clubId,
             @AuthenticationPrincipal Long userId) {
 
-        List<ClubJoinApplicantResponse> response =
-                clubManagementService.getJoinApplicants(clubId, userId);
+        List<ClubJoinApplicantResponse> response = clubManagementService.getJoinApplicants(clubId, userId);
 
-        return ResponseEntity.ok(
-                ApiResponse.success(
-                        SuccessCode.CLUB_JOIN_LIST_GET_SUCCESS,
-                        response
-                )
-        );
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.CLUB_JOIN_LIST_GET_SUCCESS, response));
     }
 
     @PatchMapping("/join/{applicantUserId}/approve")
@@ -58,19 +52,9 @@ public class ClubManagementController {
             @PathVariable Long applicantUserId,
             @AuthenticationPrincipal Long managerUserId) {
 
-        ClubJoinProcessResponse response =
-                clubManagementService.approveJoin(
-                        clubId,
-                        applicantUserId,
-                        managerUserId
-                );
+        ClubJoinProcessResponse response = clubManagementService.approveJoin(clubId, applicantUserId, managerUserId);
 
-        return ResponseEntity.ok(
-                ApiResponse.success(
-                        SuccessCode.CLUB_JOIN_APPROVE_SUCCESS,
-                        response
-                )
-        );
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.CLUB_JOIN_APPROVE_SUCCESS, response));
     }
 
     @PatchMapping("/join/{applicantUserId}/reject")
@@ -83,19 +67,9 @@ public class ClubManagementController {
             @PathVariable Long applicantUserId,
             @AuthenticationPrincipal Long managerUserId) {
 
-        ClubJoinProcessResponse response =
-                clubManagementService.rejectJoin(
-                        clubId,
-                        applicantUserId,
-                        managerUserId
-                );
+        ClubJoinProcessResponse response = clubManagementService.rejectJoin(clubId, applicantUserId, managerUserId);
 
-        return ResponseEntity.ok(
-                ApiResponse.success(
-                        SuccessCode.CLUB_JOIN_REJECT_SUCCESS,
-                        response
-                )
-        );
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.CLUB_JOIN_REJECT_SUCCESS, response));
     }
 
     @PatchMapping("/members/{targetUserId}/role")
@@ -117,12 +91,7 @@ public class ClubManagementController {
                         request
                 );
 
-        return ResponseEntity.ok(
-                ApiResponse.success(
-                        SuccessCode.CLUB_MEMBER_ROLE_UPDATE_SUCCESS,
-                        response
-                )
-        );
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.CLUB_MEMBER_ROLE_UPDATE_SUCCESS, response));
     }
 
     @PatchMapping("/president")
@@ -135,19 +104,10 @@ public class ClubManagementController {
             @AuthenticationPrincipal Long currentPresidentUserId,
             @Valid @RequestBody ClubPresidentTransferRequest request) {
 
-        ClubPresidentTransferResponse response =
-                clubManagementService.transferPresident(
-                        clubId,
-                        currentPresidentUserId,
-                        request
-                );
-
-        return ResponseEntity.ok(
-                ApiResponse.success(
-                        SuccessCode.CLUB_PRESIDENT_TRANSFER_SUCCESS,
-                        response
-                )
+        ClubPresidentTransferResponse response = clubManagementService.transferPresident(clubId, currentPresidentUserId, request
         );
+
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.CLUB_PRESIDENT_TRANSFER_SUCCESS, response));
     }
     @DeleteMapping("/members/{targetUserId}")
     @Operation(
@@ -166,11 +126,6 @@ public class ClubManagementController {
                         managerUserId
                 );
 
-        return ResponseEntity.ok(
-                ApiResponse.success(
-                        SuccessCode.CLUB_MEMBER_REMOVE_SUCCESS,
-                        response
-                )
-        );
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.CLUB_MEMBER_REMOVE_SUCCESS, response));
     }
 }

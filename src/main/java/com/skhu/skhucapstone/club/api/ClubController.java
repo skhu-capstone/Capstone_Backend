@@ -34,15 +34,9 @@ public class ClubController {
             @AuthenticationPrincipal Long userId,
             @Valid @RequestBody ClubCreateRequest request) {
 
-        ClubResponse response =
-                clubService.createClub(userId, request);
+        ClubResponse response = clubService.createClub(userId, request);
 
-        return ResponseEntity.ok(
-                ApiResponse.success(
-                        SuccessCode.CLUB_CREATE_SUCCESS,
-                        response
-                )
-        );
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.CLUB_CREATE_SUCCESS, response));
     }
 
     @GetMapping
@@ -56,15 +50,9 @@ public class ClubController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        ClubPageResponse response =
-                clubService.getClubs(keyword, category, page, size);
+        ClubPageResponse response = clubService.getClubs(keyword, category, page, size);
 
-        return ResponseEntity.ok(
-                ApiResponse.success(
-                        SuccessCode.CLUB_LIST_GET_SUCCESS,
-                        response
-                )
-        );
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.CLUB_LIST_GET_SUCCESS, response));
     }
 
     @GetMapping("/{clubId}")
@@ -75,15 +63,9 @@ public class ClubController {
     public ResponseEntity<ApiResponse<ClubResponse>> getClub(
             @PathVariable Long clubId) {
 
-        ClubResponse response =
-                clubService.getClub(clubId);
+        ClubResponse response = clubService.getClub(clubId);
 
-        return ResponseEntity.ok(
-                ApiResponse.success(
-                        SuccessCode.CLUB_DETAIL_GET_SUCCESS,
-                        response
-                )
-        );
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.CLUB_DETAIL_GET_SUCCESS, response));
     }
 
     @PatchMapping("/{clubId}")
@@ -96,46 +78,20 @@ public class ClubController {
             @AuthenticationPrincipal Long userId,
             @Valid @RequestBody ClubUpdateRequest request) {
 
-        ClubResponse response =
-                clubService.updateClub(
-                        clubId,
-                        userId,
-                        request
-                );
+        ClubResponse response = clubService.updateClub(clubId, userId, request);
 
-        return ResponseEntity.ok(
-                ApiResponse.success(
-                        SuccessCode.CLUB_UPDATE_SUCCESS,
-                        response
-                )
-        );
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.CLUB_UPDATE_SUCCESS, response));
     }
 
-    @PostMapping(
-            value = "/{clubId}/image",
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
-    )
-    @Operation(
-            summary = "동아리 이미지 업로드",
-            description = "동아리 대표 또는 운영진이 동아리 이미지를 업로드합니다."
-    )
+    @PostMapping(value = "/{clubId}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "동아리 이미지 업로드", description = "동아리 대표 또는 운영진이 동아리 이미지를 업로드합니다.")
     public ResponseEntity<ApiResponse<String>> uploadClubImage(
             @PathVariable Long clubId,
             @AuthenticationPrincipal Long userId,
             @RequestPart MultipartFile file) {
 
-        String imageUrl =
-                clubService.uploadClubImage(
-                        clubId,
-                        userId,
-                        file
-                );
+        String imageUrl = clubService.uploadClubImage(clubId, userId, file);
 
-        return ResponseEntity.ok(
-                ApiResponse.success(
-                        SuccessCode.CLUB_IMAGE_UPLOAD_SUCCESS,
-                        imageUrl
-                )
-        );
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.CLUB_IMAGE_UPLOAD_SUCCESS, imageUrl));
     }
 }
