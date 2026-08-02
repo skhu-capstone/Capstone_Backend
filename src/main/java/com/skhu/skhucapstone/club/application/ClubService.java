@@ -1,6 +1,7 @@
 package com.skhu.skhucapstone.club.application;
 
 import com.skhu.skhucapstone.club.api.dto.Request.ClubCreateRequest;
+import com.skhu.skhucapstone.club.api.dto.Request.ClubUpdateRequest;
 import com.skhu.skhucapstone.club.api.dto.Response.ClubListResponse;
 import com.skhu.skhucapstone.club.api.dto.Response.ClubPageResponse;
 import com.skhu.skhucapstone.club.api.dto.Response.ClubResponse;
@@ -34,9 +35,14 @@ public class ClubService {
     private final ImageUploadService imageUploadService;
 
     @Transactional
-    public ClubResponse createClub(Long userId, ClubCreateRequest request) {
+    public ClubResponse createClub(
+            Long userId,
+            ClubCreateRequest request
+    ) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(
+                        ErrorCode.USER_NOT_FOUND
+                ));
 
         boolean alreadyPresident =
                 clubMemberRepository.existsByUserUserIdAndRoleAndClubJoinStatus(
@@ -46,7 +52,9 @@ public class ClubService {
                 );
 
         if (alreadyPresident) {
-            throw new CustomException(ErrorCode.CLUB_PRESIDENT_ALREADY_EXISTS);
+            throw new CustomException(
+                    ErrorCode.CLUB_PRESIDENT_ALREADY_EXISTS
+            );
         }
 
         Club club = Club.builder()
@@ -111,8 +119,7 @@ public class ClubService {
     }
 
     public ClubResponse getClub(Long clubId) {
-        Club club = clubRepository.findById(clubId)
-                .orElseThrow(() -> new CustomException(ErrorCode.CLUB_NOT_FOUND));
+        Club club = findClub(clubId);
 
         long memberCount =
                 clubMemberRepository.countByClubAndClubJoinStatus(
@@ -124,11 +131,46 @@ public class ClubService {
     }
 
     @Transactional
-    public String uploadClubImage(Long clubId, MultipartFile file) {
-        Club club = clubRepository.findById(clubId)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "해당 ID의 동아리를 찾을 수 없습니다. clubId = " + clubId
-                ));
+    public ClubResponse updateClub(
+            Long clubId,
+            Long userId,
+            ClubUpdateRequest request
+    ) {
+        Club club = findClub(clubId);
+        User user = findUser(userId);
+
+        validateClubManagePermission(club, user);
+
+        club.updateInfo(
+                request.clubName(),
+                request.category(),
+                request.shortDescription(),
+                request.detailDescription(),
+                request.imageUrl(),
+                request.regularMeetingTime(),
+                request.activityLocation(),
+                request.contact()
+        );
+
+        long memberCount =
+                clubMemberRepository.countByClubAndClubJoinStatus(
+                        club,
+                        ClubJoinStatus.JOINED
+                );
+
+        return ClubResponse.from(club, memberCount);
+    }
+
+    @Transactional
+    public String uploadClubImage(
+            Long clubId,
+            Long userId,
+            MultipartFile file
+    ) {
+        Club club = findClub(clubId);
+        User user = findUser(userId);
+
+        validateClubManagePermission(club, user);
 
         if (club.getImageUrl() != null) {
             imageUploadService.delete(club.getImageUrl());
@@ -140,9 +182,52 @@ public class ClubService {
         return imageUrl;
     }
 
-    private void validateSearchCondition(int page, int size) {
+    private Club findClub(Long clubId) {
+        return clubRepository.findById(clubId)
+                .orElseThrow(() -> new CustomException(
+                        ErrorCode.CLUB_NOT_FOUND
+                ));
+    }
+
+    private User findUser(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(
+                        ErrorCode.USER_NOT_FOUND
+                ));
+    }
+
+    private void validateClubManagePermission(
+            Club club,
+            User user
+    ) {
+        ClubMember clubMember =
+                clubMemberRepository.findByClubAndUser(club, user)
+                        .orElseThrow(() -> new CustomException(
+                                ErrorCode.CLUB_MANAGE_FORBIDDEN
+                        ));
+
+        boolean joined =
+                clubMember.getClubJoinStatus() == ClubJoinStatus.JOINED;
+
+        boolean manager =
+                clubMember.getRole() == ClubRole.PRESIDENT
+                        || clubMember.getRole() == ClubRole.STAFF;
+
+        if (!joined || !manager) {
+            throw new CustomException(
+                    ErrorCode.CLUB_MANAGE_FORBIDDEN
+            );
+        }
+    }
+
+    private void validateSearchCondition(
+            int page,
+            int size
+    ) {
         if (page < 0 || size < 1) {
-            throw new CustomException(ErrorCode.INVALID_SEARCH_CONDITION);
+            throw new CustomException(
+                    ErrorCode.INVALID_SEARCH_CONDITION
+            );
         }
     }
 }

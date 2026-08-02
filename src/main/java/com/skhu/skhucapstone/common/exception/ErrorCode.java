@@ -37,6 +37,7 @@ public enum ErrorCode {
     // Club
     CLUB_NOT_FOUND(HttpStatus.NOT_FOUND, "CLUB_NOT_FOUND", "해당 동아리를 찾을 수 없습니다."),
     CLUB_PRESIDENT_ALREADY_EXISTS(HttpStatus.CONFLICT, "CLUB_PRESIDENT_ALREADY_EXISTS", "이미 대표로 활동 중인 동아리가 있습니다."),
+    CLUB_MANAGE_FORBIDDEN(HttpStatus.FORBIDDEN, "CLUB_MANAGE_FORBIDDEN", "동아리 정보를 관리할 권한이 없습니다."),
 
     // ClubMember
     CLUB_JOIN_ALREADY_PENDING(HttpStatus.CONFLICT, "CLUB_JOIN_ALREADY_PENDING", "이미 가입 신청이 진행 중인 동아리입니다."),
