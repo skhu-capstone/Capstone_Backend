@@ -1,9 +1,11 @@
 package com.skhu.skhucapstone.clubmember.api;
 
 import com.skhu.skhucapstone.clubmember.api.dto.request.ClubMemberRoleUpdateRequest;
+import com.skhu.skhucapstone.clubmember.api.dto.request.ClubPresidentTransferRequest;
 import com.skhu.skhucapstone.clubmember.api.dto.response.ClubJoinApplicantResponse;
 import com.skhu.skhucapstone.clubmember.api.dto.response.ClubJoinProcessResponse;
 import com.skhu.skhucapstone.clubmember.api.dto.response.ClubMemberRoleUpdateResponse;
+import com.skhu.skhucapstone.clubmember.api.dto.response.ClubPresidentTransferResponse;
 import com.skhu.skhucapstone.clubmember.application.ClubManagementService;
 import com.skhu.skhucapstone.common.exception.SuccessCode;
 import com.skhu.skhucapstone.common.response.ApiResponse;
@@ -117,6 +119,31 @@ public class ClubManagementController {
         return ResponseEntity.ok(
                 ApiResponse.success(
                         SuccessCode.CLUB_MEMBER_ROLE_UPDATE_SUCCESS,
+                        response
+                )
+        );
+    }
+
+    @PatchMapping("/president")
+    @Operation(
+            summary = "동아리 대표 권한 이전",
+            description = "현재 동아리 대표가 가입 완료된 일반 멤버 또는 운영진에게 대표 권한을 이전합니다."
+    )
+    public ResponseEntity<ApiResponse<ClubPresidentTransferResponse>> transferPresident(
+            @PathVariable Long clubId,
+            @AuthenticationPrincipal Long currentPresidentUserId,
+            @Valid @RequestBody ClubPresidentTransferRequest request) {
+
+        ClubPresidentTransferResponse response =
+                clubManagementService.transferPresident(
+                        clubId,
+                        currentPresidentUserId,
+                        request
+                );
+
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        SuccessCode.CLUB_PRESIDENT_TRANSFER_SUCCESS,
                         response
                 )
         );

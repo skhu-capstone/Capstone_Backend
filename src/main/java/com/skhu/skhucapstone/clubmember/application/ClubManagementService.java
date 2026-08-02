@@ -3,9 +3,11 @@ package com.skhu.skhucapstone.clubmember.application;
 import com.skhu.skhucapstone.club.domain.Club;
 import com.skhu.skhucapstone.club.domain.repository.ClubRepository;
 import com.skhu.skhucapstone.clubmember.api.dto.request.ClubMemberRoleUpdateRequest;
+import com.skhu.skhucapstone.clubmember.api.dto.request.ClubPresidentTransferRequest;
 import com.skhu.skhucapstone.clubmember.api.dto.response.ClubJoinApplicantResponse;
 import com.skhu.skhucapstone.clubmember.api.dto.response.ClubJoinProcessResponse;
 import com.skhu.skhucapstone.clubmember.api.dto.response.ClubMemberRoleUpdateResponse;
+import com.skhu.skhucapstone.clubmember.api.dto.response.ClubPresidentTransferResponse;
 import com.skhu.skhucapstone.clubmember.domain.ClubJoinStatus;
 import com.skhu.skhucapstone.clubmember.domain.ClubMember;
 import com.skhu.skhucapstone.clubmember.domain.ClubRole;
@@ -128,6 +130,47 @@ public class ClubManagementService {
                 .build();
     }
 
+    @Transactional
+    public ClubPresidentTransferResponse transferPresident(
+            Long clubId,
+            Long currentPresidentUserId,
+            ClubPresidentTransferRequest request
+    ) {
+        Club club = findClub(clubId);
+        User currentPresident = findUser(currentPresidentUserId);
+
+        ClubMember currentPresidentMember =
+                findCurrentPresident(club, currentPresident);
+
+        if (currentPresidentUserId.equals(request.newPresidentUserId())) {
+            throw new CustomException(
+                    ErrorCode.CLUB_PRESIDENT_TRANSFER_TO_SELF
+            );
+        }
+
+        User newPresident = findUser(request.newPresidentUserId());
+
+        ClubMember newPresidentMember =
+                clubMemberRepository.findByClubAndUser(club, newPresident)
+                        .orElseThrow(() -> new CustomException(
+                                ErrorCode.CLUB_PRESIDENT_TRANSFER_TARGET_NOT_FOUND
+                        ));
+
+        validatePresidentTransferTarget(newPresidentMember);
+        validateNoOtherPresidency(newPresident.getUserId());
+
+        currentPresidentMember.changeRole(ClubRole.STAFF);
+        newPresidentMember.changeRole(ClubRole.PRESIDENT);
+
+        return ClubPresidentTransferResponse.builder()
+                .clubId(club.getId())
+                .previousPresidentUserId(currentPresident.getUserId())
+                .previousPresidentRole(currentPresidentMember.getRole())
+                .newPresidentUserId(newPresident.getUserId())
+                .newPresidentRole(newPresidentMember.getRole())
+                .build();
+    }
+
     private Club findClub(Long clubId) {
         return clubRepository.findById(clubId)
                 .orElseThrow(() -> new CustomException(
@@ -150,6 +193,31 @@ public class ClubManagementService {
                 .orElseThrow(() -> new CustomException(
                         ErrorCode.CLUB_JOIN_APPLICANT_NOT_FOUND
                 ));
+    }
+
+    private ClubMember findCurrentPresident(
+            Club club,
+            User user
+    ) {
+        ClubMember clubMember =
+                clubMemberRepository.findByClubAndUser(club, user)
+                        .orElseThrow(() -> new CustomException(
+                                ErrorCode.CLUB_PRESIDENT_TRANSFER_FORBIDDEN
+                        ));
+
+        boolean joined =
+                clubMember.getClubJoinStatus() == ClubJoinStatus.JOINED;
+
+        boolean president =
+                clubMember.getRole() == ClubRole.PRESIDENT;
+
+        if (!joined || !president) {
+            throw new CustomException(
+                    ErrorCode.CLUB_PRESIDENT_TRANSFER_FORBIDDEN
+            );
+        }
+
+        return clubMember;
     }
 
     private void validateJoinListPermission(
@@ -257,6 +325,40 @@ public class ClubManagementService {
         if (targetMember.getRole() == requestedRole) {
             throw new CustomException(
                     ErrorCode.CLUB_MEMBER_SAME_ROLE
+            );
+        }
+    }
+
+    private void validatePresidentTransferTarget(
+            ClubMember newPresidentMember
+    ) {
+        boolean joined =
+                newPresidentMember.getClubJoinStatus()
+                        == ClubJoinStatus.JOINED;
+
+        boolean allowedRole =
+                newPresidentMember.getRole() == ClubRole.MEMBER
+                        || newPresidentMember.getRole() == ClubRole.STAFF;
+
+        if (!joined || !allowedRole) {
+            throw new CustomException(
+                    ErrorCode.CLUB_PRESIDENT_TRANSFER_NOT_ALLOWED
+            );
+        }
+    }
+
+    private void validateNoOtherPresidency(Long userId) {
+        boolean alreadyPresident =
+                clubMemberRepository
+                        .existsByUserUserIdAndRoleAndClubJoinStatus(
+                                userId,
+                                ClubRole.PRESIDENT,
+                                ClubJoinStatus.JOINED
+                        );
+
+        if (alreadyPresident) {
+            throw new CustomException(
+                    ErrorCode.CLUB_PRESIDENT_ALREADY_EXISTS
             );
         }
     }

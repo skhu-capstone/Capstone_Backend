@@ -51,6 +51,10 @@ public enum ErrorCode {
     CLUB_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "CLUB_MEMBER_NOT_FOUND", "해당 동아리의 멤버를 찾을 수 없습니다."),
     CLUB_MEMBER_ROLE_UPDATE_NOT_ALLOWED(HttpStatus.CONFLICT, "CLUB_MEMBER_ROLE_UPDATE_NOT_ALLOWED", "가입 완료된 일반 멤버와 운영진의 역할만 변경할 수 있습니다."),
     CLUB_MEMBER_SAME_ROLE(HttpStatus.CONFLICT, "CLUB_MEMBER_SAME_ROLE", "현재 역할과 동일한 역할로 변경할 수 없습니다."),
+    CLUB_PRESIDENT_TRANSFER_FORBIDDEN(HttpStatus.FORBIDDEN, "CLUB_PRESIDENT_TRANSFER_FORBIDDEN", "동아리 대표 권한을 이전할 권한이 없습니다."),
+    CLUB_PRESIDENT_TRANSFER_TARGET_NOT_FOUND(HttpStatus.NOT_FOUND, "CLUB_PRESIDENT_TRANSFER_TARGET_NOT_FOUND", "대표 권한을 이전할 동아리 멤버를 찾을 수 없습니다."),
+    CLUB_PRESIDENT_TRANSFER_NOT_ALLOWED(HttpStatus.CONFLICT, "CLUB_PRESIDENT_TRANSFER_NOT_ALLOWED", "가입 완료된 일반 멤버 또는 운영진에게만 대표 권한을 이전할 수 있습니다."),
+    CLUB_PRESIDENT_TRANSFER_TO_SELF(HttpStatus.CONFLICT, "CLUB_PRESIDENT_TRANSFER_TO_SELF", "자기 자신에게 대표 권한을 이전할 수 없습니다."),
 
     // Post
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "POST_NOT_FOUND", "게시글을 찾을 수 없습니다."),
