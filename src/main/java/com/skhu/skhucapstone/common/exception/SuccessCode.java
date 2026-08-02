@@ -58,7 +58,7 @@ public enum SuccessCode {
     CLUB_JOIN_REJECT_SUCCESS(HttpStatus.OK, "CLUB_JOIN_REJECT_SUCCESS", "동아리 가입 신청이 거절되었습니다."),
     CLUB_MEMBER_ROLE_UPDATE_SUCCESS(HttpStatus.OK, "CLUB_MEMBER_ROLE_UPDATE_SUCCESS", "동아리 멤버 역할이 변경되었습니다."),
     CLUB_PRESIDENT_TRANSFER_SUCCESS(HttpStatus.OK, "CLUB_PRESIDENT_TRANSFER_SUCCESS", "동아리 대표 권한이 이전되었습니다."),
-
+    CLUB_MEMBER_REMOVE_SUCCESS(HttpStatus.OK, "CLUB_MEMBER_REMOVE_SUCCESS", "동아리 멤버가 내보내기 처리되었습니다."),
 
     //Main
     MAIN_GET_SUCCESS(HttpStatus.OK, "MAIN_GET_SUCCESS", "메인페이지 조회가 완료되었습니다."),

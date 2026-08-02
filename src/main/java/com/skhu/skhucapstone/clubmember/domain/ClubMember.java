@@ -121,4 +121,11 @@ public class ClubMember {
         this.joinedAt = null;
         this.updatedAt = LocalDateTime.now();
     }
+
+    public void removeFromClub() {
+        this.role = ClubRole.MEMBER;
+        this.clubJoinStatus = ClubJoinStatus.WITHDRAWN;
+        this.joinedAt = null;
+        this.updatedAt = LocalDateTime.now();
+    }
 }

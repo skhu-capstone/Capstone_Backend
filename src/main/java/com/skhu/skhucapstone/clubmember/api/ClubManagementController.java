@@ -9,6 +9,7 @@ import com.skhu.skhucapstone.clubmember.api.dto.response.ClubPresidentTransferRe
 import com.skhu.skhucapstone.clubmember.application.ClubManagementService;
 import com.skhu.skhucapstone.common.exception.SuccessCode;
 import com.skhu.skhucapstone.common.response.ApiResponse;
+import com.skhu.skhucapstone.clubmember.api.dto.response.ClubMemberRemoveResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -144,6 +145,30 @@ public class ClubManagementController {
         return ResponseEntity.ok(
                 ApiResponse.success(
                         SuccessCode.CLUB_PRESIDENT_TRANSFER_SUCCESS,
+                        response
+                )
+        );
+    }
+    @DeleteMapping("/members/{targetUserId}")
+    @Operation(
+            summary = "동아리 멤버 내보내기",
+            description = "동아리 대표가 가입 완료된 일반 멤버 또는 운영진을 동아리에서 내보냅니다."
+    )
+    public ResponseEntity<ApiResponse<ClubMemberRemoveResponse>> removeMember(
+            @PathVariable Long clubId,
+            @PathVariable Long targetUserId,
+            @AuthenticationPrincipal Long managerUserId) {
+
+        ClubMemberRemoveResponse response =
+                clubManagementService.removeMember(
+                        clubId,
+                        targetUserId,
+                        managerUserId
+                );
+
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        SuccessCode.CLUB_MEMBER_REMOVE_SUCCESS,
                         response
                 )
         );

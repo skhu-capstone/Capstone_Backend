@@ -16,6 +16,7 @@ import com.skhu.skhucapstone.common.exception.CustomException;
 import com.skhu.skhucapstone.common.exception.ErrorCode;
 import com.skhu.skhucapstone.user.entity.User;
 import com.skhu.skhucapstone.user.repository.UserRepository;
+import com.skhu.skhucapstone.clubmember.api.dto.response.ClubMemberRemoveResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -168,6 +169,40 @@ public class ClubManagementService {
                 .previousPresidentRole(currentPresidentMember.getRole())
                 .newPresidentUserId(newPresident.getUserId())
                 .newPresidentRole(newPresidentMember.getRole())
+                .build();
+    }
+
+    @Transactional
+    public ClubMemberRemoveResponse removeMember(
+            Long clubId,
+            Long targetUserId,
+            Long managerUserId
+    ) {
+        Club club = findClub(clubId);
+        User manager = findUser(managerUserId);
+
+        validateMemberRemovePermission(club, manager);
+
+        if (managerUserId.equals(targetUserId)) {
+            throw new CustomException(ErrorCode.CLUB_MEMBER_REMOVE_SELF);
+        }
+
+        User targetUser = findUser(targetUserId);
+
+        ClubMember targetMember =
+                clubMemberRepository.findByClubAndUser(club, targetUser)
+                        .orElseThrow(() -> new CustomException(
+                                ErrorCode.CLUB_MEMBER_NOT_FOUND
+                        ));
+
+        validateMemberRemoveTarget(targetMember);
+
+        targetMember.removeFromClub();
+
+        return ClubMemberRemoveResponse.builder()
+                .clubId(club.getId())
+                .userId(targetUser.getUserId())
+                .clubJoinStatus(targetMember.getClubJoinStatus())
                 .build();
     }
 
@@ -373,5 +408,45 @@ public class ClubManagementService {
                 .clubJoinStatus(clubMember.getClubJoinStatus())
                 .joinedAt(clubMember.getJoinedAt())
                 .build();
+    }
+
+    private void validateMemberRemovePermission(
+            Club club,
+            User user
+    ) {
+        ClubMember clubMember =
+                clubMemberRepository.findByClubAndUser(club, user)
+                        .orElseThrow(() -> new CustomException(
+                                ErrorCode.CLUB_MEMBER_REMOVE_FORBIDDEN
+                        ));
+
+        boolean joined =
+                clubMember.getClubJoinStatus() == ClubJoinStatus.JOINED;
+
+        boolean president =
+                clubMember.getRole() == ClubRole.PRESIDENT;
+
+        if (!joined || !president) {
+            throw new CustomException(
+                    ErrorCode.CLUB_MEMBER_REMOVE_FORBIDDEN
+            );
+        }
+    }
+
+    private void validateMemberRemoveTarget(
+            ClubMember targetMember
+    ) {
+        boolean joined =
+                targetMember.getClubJoinStatus() == ClubJoinStatus.JOINED;
+
+        boolean removableRole =
+                targetMember.getRole() == ClubRole.MEMBER
+                        || targetMember.getRole() == ClubRole.STAFF;
+
+        if (!joined || !removableRole) {
+            throw new CustomException(
+                    ErrorCode.CLUB_MEMBER_REMOVE_NOT_ALLOWED
+            );
+        }
     }
 }
