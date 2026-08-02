@@ -1,20 +1,19 @@
 package com.skhu.skhucapstone.clubmember.api;
 
+import com.skhu.skhucapstone.clubmember.api.dto.request.ClubMemberRoleUpdateRequest;
 import com.skhu.skhucapstone.clubmember.api.dto.response.ClubJoinApplicantResponse;
 import com.skhu.skhucapstone.clubmember.api.dto.response.ClubJoinProcessResponse;
+import com.skhu.skhucapstone.clubmember.api.dto.response.ClubMemberRoleUpdateResponse;
 import com.skhu.skhucapstone.clubmember.application.ClubManagementService;
 import com.skhu.skhucapstone.common.exception.SuccessCode;
 import com.skhu.skhucapstone.common.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -91,6 +90,33 @@ public class ClubManagementController {
         return ResponseEntity.ok(
                 ApiResponse.success(
                         SuccessCode.CLUB_JOIN_REJECT_SUCCESS,
+                        response
+                )
+        );
+    }
+
+    @PatchMapping("/members/{targetUserId}/role")
+    @Operation(
+            summary = "동아리 멤버 역할 변경",
+            description = "동아리 대표가 가입 완료된 일반 멤버와 운영진의 역할을 변경합니다."
+    )
+    public ResponseEntity<ApiResponse<ClubMemberRoleUpdateResponse>> updateMemberRole(
+            @PathVariable Long clubId,
+            @PathVariable Long targetUserId,
+            @AuthenticationPrincipal Long managerUserId,
+            @Valid @RequestBody ClubMemberRoleUpdateRequest request) {
+
+        ClubMemberRoleUpdateResponse response =
+                clubManagementService.updateMemberRole(
+                        clubId,
+                        targetUserId,
+                        managerUserId,
+                        request
+                );
+
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        SuccessCode.CLUB_MEMBER_ROLE_UPDATE_SUCCESS,
                         response
                 )
         );

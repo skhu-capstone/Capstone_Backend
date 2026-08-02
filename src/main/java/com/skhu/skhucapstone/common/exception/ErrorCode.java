@@ -47,6 +47,10 @@ public enum ErrorCode {
     CLUB_JOIN_MANAGE_FORBIDDEN(HttpStatus.FORBIDDEN, "CLUB_JOIN_MANAGE_FORBIDDEN", "동아리 가입 신청을 처리할 권한이 없습니다."),
     CLUB_JOIN_APPLICANT_NOT_FOUND(HttpStatus.NOT_FOUND, "CLUB_JOIN_APPLICANT_NOT_FOUND", "해당 사용자의 가입 신청 내역을 찾을 수 없습니다."),
     CLUB_JOIN_NOT_PENDING(HttpStatus.CONFLICT, "CLUB_JOIN_NOT_PENDING", "가입 대기 중인 신청만 승인하거나 거절할 수 있습니다."),
+    CLUB_MEMBER_ROLE_MANAGE_FORBIDDEN(HttpStatus.FORBIDDEN, "CLUB_MEMBER_ROLE_MANAGE_FORBIDDEN", "동아리 멤버 역할을 변경할 권한이 없습니다."),
+    CLUB_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "CLUB_MEMBER_NOT_FOUND", "해당 동아리의 멤버를 찾을 수 없습니다."),
+    CLUB_MEMBER_ROLE_UPDATE_NOT_ALLOWED(HttpStatus.CONFLICT, "CLUB_MEMBER_ROLE_UPDATE_NOT_ALLOWED", "가입 완료된 일반 멤버와 운영진의 역할만 변경할 수 있습니다."),
+    CLUB_MEMBER_SAME_ROLE(HttpStatus.CONFLICT, "CLUB_MEMBER_SAME_ROLE", "현재 역할과 동일한 역할로 변경할 수 없습니다."),
 
     // Post
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "POST_NOT_FOUND", "게시글을 찾을 수 없습니다."),

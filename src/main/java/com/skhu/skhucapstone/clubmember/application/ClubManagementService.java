@@ -2,8 +2,10 @@ package com.skhu.skhucapstone.clubmember.application;
 
 import com.skhu.skhucapstone.club.domain.Club;
 import com.skhu.skhucapstone.club.domain.repository.ClubRepository;
+import com.skhu.skhucapstone.clubmember.api.dto.request.ClubMemberRoleUpdateRequest;
 import com.skhu.skhucapstone.clubmember.api.dto.response.ClubJoinApplicantResponse;
 import com.skhu.skhucapstone.clubmember.api.dto.response.ClubJoinProcessResponse;
+import com.skhu.skhucapstone.clubmember.api.dto.response.ClubMemberRoleUpdateResponse;
 import com.skhu.skhucapstone.clubmember.domain.ClubJoinStatus;
 import com.skhu.skhucapstone.clubmember.domain.ClubMember;
 import com.skhu.skhucapstone.clubmember.domain.ClubRole;
@@ -31,11 +33,8 @@ public class ClubManagementService {
             Long clubId,
             Long userId
     ) {
-        Club club = clubRepository.findById(clubId)
-                .orElseThrow(() -> new CustomException(ErrorCode.CLUB_NOT_FOUND));
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        Club club = findClub(clubId);
+        User user = findUser(userId);
 
         validateJoinListPermission(club, user);
 
@@ -98,14 +97,49 @@ public class ClubManagementService {
         return toJoinProcessResponse(applicantMember);
     }
 
+    @Transactional
+    public ClubMemberRoleUpdateResponse updateMemberRole(
+            Long clubId,
+            Long targetUserId,
+            Long managerUserId,
+            ClubMemberRoleUpdateRequest request
+    ) {
+        Club club = findClub(clubId);
+        User manager = findUser(managerUserId);
+
+        validateRoleManagePermission(club, manager);
+
+        User targetUser = findUser(targetUserId);
+
+        ClubMember targetMember =
+                clubMemberRepository.findByClubAndUser(club, targetUser)
+                        .orElseThrow(() -> new CustomException(
+                                ErrorCode.CLUB_MEMBER_NOT_FOUND
+                        ));
+
+        validateRoleUpdate(targetMember, request.role());
+
+        targetMember.changeRole(request.role());
+
+        return ClubMemberRoleUpdateResponse.builder()
+                .clubId(club.getId())
+                .userId(targetUser.getUserId())
+                .role(targetMember.getRole())
+                .build();
+    }
+
     private Club findClub(Long clubId) {
         return clubRepository.findById(clubId)
-                .orElseThrow(() -> new CustomException(ErrorCode.CLUB_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(
+                        ErrorCode.CLUB_NOT_FOUND
+                ));
     }
 
     private User findUser(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(
+                        ErrorCode.USER_NOT_FOUND
+                ));
     }
 
     private ClubMember findApplicant(
@@ -122,10 +156,11 @@ public class ClubManagementService {
             Club club,
             User user
     ) {
-        ClubMember clubMember = clubMemberRepository.findByClubAndUser(club, user)
-                .orElseThrow(() -> new CustomException(
-                        ErrorCode.CLUB_JOIN_LIST_FORBIDDEN
-                ));
+        ClubMember clubMember =
+                clubMemberRepository.findByClubAndUser(club, user)
+                        .orElseThrow(() -> new CustomException(
+                                ErrorCode.CLUB_JOIN_LIST_FORBIDDEN
+                        ));
 
         boolean joined =
                 clubMember.getClubJoinStatus() == ClubJoinStatus.JOINED;
@@ -135,7 +170,9 @@ public class ClubManagementService {
                         || clubMember.getRole() == ClubRole.STAFF;
 
         if (!joined || !manager) {
-            throw new CustomException(ErrorCode.CLUB_JOIN_LIST_FORBIDDEN);
+            throw new CustomException(
+                    ErrorCode.CLUB_JOIN_LIST_FORBIDDEN
+            );
         }
     }
 
@@ -143,10 +180,11 @@ public class ClubManagementService {
             Club club,
             User user
     ) {
-        ClubMember clubMember = clubMemberRepository.findByClubAndUser(club, user)
-                .orElseThrow(() -> new CustomException(
-                        ErrorCode.CLUB_JOIN_MANAGE_FORBIDDEN
-                ));
+        ClubMember clubMember =
+                clubMemberRepository.findByClubAndUser(club, user)
+                        .orElseThrow(() -> new CustomException(
+                                ErrorCode.CLUB_JOIN_MANAGE_FORBIDDEN
+                        ));
 
         boolean joined =
                 clubMember.getClubJoinStatus() == ClubJoinStatus.JOINED;
@@ -155,13 +193,71 @@ public class ClubManagementService {
                 clubMember.getRole() == ClubRole.PRESIDENT;
 
         if (!joined || !president) {
-            throw new CustomException(ErrorCode.CLUB_JOIN_MANAGE_FORBIDDEN);
+            throw new CustomException(
+                    ErrorCode.CLUB_JOIN_MANAGE_FORBIDDEN
+            );
         }
     }
 
-    private void validatePendingApplicant(ClubMember applicantMember) {
-        if (applicantMember.getClubJoinStatus() != ClubJoinStatus.PENDING) {
-            throw new CustomException(ErrorCode.CLUB_JOIN_NOT_PENDING);
+    private void validateRoleManagePermission(
+            Club club,
+            User user
+    ) {
+        ClubMember clubMember =
+                clubMemberRepository.findByClubAndUser(club, user)
+                        .orElseThrow(() -> new CustomException(
+                                ErrorCode.CLUB_MEMBER_ROLE_MANAGE_FORBIDDEN
+                        ));
+
+        boolean joined =
+                clubMember.getClubJoinStatus() == ClubJoinStatus.JOINED;
+
+        boolean president =
+                clubMember.getRole() == ClubRole.PRESIDENT;
+
+        if (!joined || !president) {
+            throw new CustomException(
+                    ErrorCode.CLUB_MEMBER_ROLE_MANAGE_FORBIDDEN
+            );
+        }
+    }
+
+    private void validatePendingApplicant(
+            ClubMember applicantMember
+    ) {
+        if (applicantMember.getClubJoinStatus()
+                != ClubJoinStatus.PENDING) {
+            throw new CustomException(
+                    ErrorCode.CLUB_JOIN_NOT_PENDING
+            );
+        }
+    }
+
+    private void validateRoleUpdate(
+            ClubMember targetMember,
+            ClubRole requestedRole
+    ) {
+        boolean joined =
+                targetMember.getClubJoinStatus()
+                        == ClubJoinStatus.JOINED;
+
+        boolean targetIsPresident =
+                targetMember.getRole() == ClubRole.PRESIDENT;
+
+        boolean allowedRequestedRole =
+                requestedRole == ClubRole.MEMBER
+                        || requestedRole == ClubRole.STAFF;
+
+        if (!joined || targetIsPresident || !allowedRequestedRole) {
+            throw new CustomException(
+                    ErrorCode.CLUB_MEMBER_ROLE_UPDATE_NOT_ALLOWED
+            );
+        }
+
+        if (targetMember.getRole() == requestedRole) {
+            throw new CustomException(
+                    ErrorCode.CLUB_MEMBER_SAME_ROLE
+            );
         }
     }
 
