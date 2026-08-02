@@ -18,4 +18,5 @@ public interface ClubMemberRepository extends JpaRepository<ClubMember, Long> {
     List<ClubMember> findByClubAndClubJoinStatus(Club club, ClubJoinStatus clubJoinStatus);
     long countByClubAndClubJoinStatus(Club club, ClubJoinStatus clubJoinStatus);
     List<ClubMember> findByUserUserIdAndClubJoinStatusNotOrderByRequestedAtDesc(Long userId, ClubJoinStatus clubJoinStatus);
+    List<ClubMember> findByClubAndClubJoinStatusOrderByRequestedAtDesc(Club club, ClubJoinStatus clubJoinStatus);
 }
