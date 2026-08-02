@@ -3,7 +3,7 @@ package com.skhu.skhucapstone.club.api.dto.Request;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public record ClubCreateRequest(
+public record ClubUpdateRequest(
 
         @NotBlank(message = "동아리명을 입력해주세요.")
         @Size(max = 100, message = "동아리명은 100자 이하로 입력해주세요.")
@@ -20,7 +20,6 @@ public record ClubCreateRequest(
         @NotBlank(message = "상세 설명을 입력해주세요.")
         String detailDescription,
 
-        @Size(max = 1000, message = "이미지 URL은 1000자 이하로 입력해주세요.")
         String imageUrl,
 
         @NotBlank(message = "정기 모임 시간을 입력해주세요.")
