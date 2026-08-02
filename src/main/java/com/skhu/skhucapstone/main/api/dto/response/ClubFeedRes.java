@@ -21,4 +21,8 @@ public class ClubFeedRes {
     private List<String> imageUrls;
 
     private String content;
+
+    private long likeCount;
+
+    private boolean liked;
 }

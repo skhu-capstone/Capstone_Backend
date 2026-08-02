@@ -1,6 +1,8 @@
 package com.skhu.skhucapstone.clubmember.domain;
 
 public enum ClubJoinStatus {
-    NONE,
-    JOINED
+    PENDING,
+    JOINED,
+    REJECTED,
+    WITHDRAWN
 }
