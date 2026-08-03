@@ -43,9 +43,6 @@ public class Club {
     @Column(name = "contact", nullable = false, length = 100)
     private String contact;
 
-    @Column(name = "is_approved", nullable = false)
-    private boolean approved;
-
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
@@ -71,23 +68,12 @@ public class Club {
         this.regularMeetingTime = regularMeetingTime;
         this.activityLocation = activityLocation;
         this.contact = contact;
-        this.approved = false;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
 
     public void updateImage(String imageUrl) {
         this.imageUrl = imageUrl;
-        this.updatedAt = LocalDateTime.now();
-    }
-
-    public void approve() {
-        this.approved = true;
-        this.updatedAt = LocalDateTime.now();
-    }
-
-    public void reject() {
-        this.approved = false;
         this.updatedAt = LocalDateTime.now();
     }
 

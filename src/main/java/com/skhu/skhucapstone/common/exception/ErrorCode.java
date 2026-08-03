@@ -35,11 +35,31 @@ public enum ErrorCode {
     COFFEECHAT_PROFILE_IMAGE_FORBIDDEN(HttpStatus.FORBIDDEN, "COFFEECHAT_PROFILE_IMAGE_FORBIDDEN", "본인의 커피챗 프로필 이미지만 변경할 수 있습니다."),
 
 
-    // ClubMember
-    CLUB_MEMBER_PRESIDENT_REQUIRED(HttpStatus.BAD_REQUEST, "CLUB_MEMBER_PRESIDENT_REQUIRED", "부원 명단에는 PRESIDENT 역할이 최소 1명 이상 필요합니다."),
-    CLUB_MEMBER_DUPLICATE_USER(HttpStatus.BAD_REQUEST, "CLUB_MEMBER_DUPLICATE_USER", "요청한 부원 명단에 중복된 사용자가 있습니다."),
-    CLUB_MEMBER_ALREADY_REGISTERED(HttpStatus.CONFLICT, "CLUB_MEMBER_ALREADY_REGISTERED", "이미 해당 동아리에 등록된 사용자입니다."),
+    // Club
     CLUB_NOT_FOUND(HttpStatus.NOT_FOUND, "CLUB_NOT_FOUND", "해당 동아리를 찾을 수 없습니다."),
+    CLUB_PRESIDENT_ALREADY_EXISTS(HttpStatus.CONFLICT, "CLUB_PRESIDENT_ALREADY_EXISTS", "이미 대표로 활동 중인 동아리가 있습니다."),
+    CLUB_MANAGE_FORBIDDEN(HttpStatus.FORBIDDEN, "CLUB_MANAGE_FORBIDDEN", "동아리 정보를 관리할 권한이 없습니다."),
+
+    // ClubMember
+    CLUB_JOIN_ALREADY_PENDING(HttpStatus.CONFLICT, "CLUB_JOIN_ALREADY_PENDING", "이미 가입 신청이 진행 중인 동아리입니다."),
+    CLUB_MEMBER_ALREADY_JOINED(HttpStatus.CONFLICT, "CLUB_MEMBER_ALREADY_JOINED", "이미 가입한 동아리입니다."),
+    CLUB_JOIN_REQUEST_NOT_FOUND(HttpStatus.NOT_FOUND, "CLUB_JOIN_REQUEST_NOT_FOUND", "동아리 가입 신청 내역을 찾을 수 없습니다."),
+    CLUB_JOIN_CANCEL_NOT_ALLOWED(HttpStatus.CONFLICT, "CLUB_JOIN_CANCEL_NOT_ALLOWED", "가입 대기 중인 신청만 취소할 수 있습니다."),
+    CLUB_JOIN_LIST_FORBIDDEN(HttpStatus.FORBIDDEN, "CLUB_JOIN_LIST_FORBIDDEN", "동아리 가입 신청자 목록을 조회할 권한이 없습니다."),
+    CLUB_JOIN_MANAGE_FORBIDDEN(HttpStatus.FORBIDDEN, "CLUB_JOIN_MANAGE_FORBIDDEN", "동아리 가입 신청을 처리할 권한이 없습니다."),
+    CLUB_JOIN_APPLICANT_NOT_FOUND(HttpStatus.NOT_FOUND, "CLUB_JOIN_APPLICANT_NOT_FOUND", "해당 사용자의 가입 신청 내역을 찾을 수 없습니다."),
+    CLUB_JOIN_NOT_PENDING(HttpStatus.CONFLICT, "CLUB_JOIN_NOT_PENDING", "가입 대기 중인 신청만 승인하거나 거절할 수 있습니다."),
+    CLUB_MEMBER_ROLE_MANAGE_FORBIDDEN(HttpStatus.FORBIDDEN, "CLUB_MEMBER_ROLE_MANAGE_FORBIDDEN", "동아리 멤버 역할을 변경할 권한이 없습니다."),
+    CLUB_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "CLUB_MEMBER_NOT_FOUND", "해당 동아리의 멤버를 찾을 수 없습니다."),
+    CLUB_MEMBER_ROLE_UPDATE_NOT_ALLOWED(HttpStatus.CONFLICT, "CLUB_MEMBER_ROLE_UPDATE_NOT_ALLOWED", "가입 완료된 일반 멤버와 운영진의 역할만 변경할 수 있습니다."),
+    CLUB_MEMBER_SAME_ROLE(HttpStatus.CONFLICT, "CLUB_MEMBER_SAME_ROLE", "현재 역할과 동일한 역할로 변경할 수 없습니다."),
+    CLUB_PRESIDENT_TRANSFER_FORBIDDEN(HttpStatus.FORBIDDEN, "CLUB_PRESIDENT_TRANSFER_FORBIDDEN", "동아리 대표 권한을 이전할 권한이 없습니다."),
+    CLUB_PRESIDENT_TRANSFER_TARGET_NOT_FOUND(HttpStatus.NOT_FOUND, "CLUB_PRESIDENT_TRANSFER_TARGET_NOT_FOUND", "대표 권한을 이전할 동아리 멤버를 찾을 수 없습니다."),
+    CLUB_PRESIDENT_TRANSFER_NOT_ALLOWED(HttpStatus.CONFLICT, "CLUB_PRESIDENT_TRANSFER_NOT_ALLOWED", "가입 완료된 일반 멤버 또는 운영진에게만 대표 권한을 이전할 수 있습니다."),
+    CLUB_PRESIDENT_TRANSFER_TO_SELF(HttpStatus.CONFLICT, "CLUB_PRESIDENT_TRANSFER_TO_SELF", "자기 자신에게 대표 권한을 이전할 수 없습니다."),
+    CLUB_MEMBER_REMOVE_FORBIDDEN(HttpStatus.FORBIDDEN, "CLUB_MEMBER_REMOVE_FORBIDDEN", "동아리 멤버를 내보낼 권한이 없습니다."),
+    CLUB_MEMBER_REMOVE_NOT_ALLOWED(HttpStatus.CONFLICT, "CLUB_MEMBER_REMOVE_NOT_ALLOWED", "가입 완료된 일반 멤버 또는 운영진만 내보낼 수 있습니다."),
+    CLUB_MEMBER_REMOVE_SELF(HttpStatus.CONFLICT, "CLUB_MEMBER_REMOVE_SELF", "자기 자신을 동아리에서 내보낼 수 없습니다."),
 
     // Post
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "POST_NOT_FOUND", "게시글을 찾을 수 없습니다."),

@@ -44,17 +44,23 @@ public enum SuccessCode {
     LIKE_TOGGLE_SUCCESS(HttpStatus.OK, "LIKE_TOGGLE_SUCCESS", "좋아요 상태가 변경되었습니다."),
 
     // Club
-    CLUB_CREATE_SUCCESS(HttpStatus.OK, "CLUB_CREATE_SUCCESS", "동아리 생성 신청이 완료되었습니다."),
+    CLUB_CREATE_SUCCESS(HttpStatus.OK, "CLUB_CREATE_SUCCESS", "동아리 생성이 완료되었습니다."),
     CLUB_LIST_GET_SUCCESS(HttpStatus.OK, "CLUB_LIST_GET_SUCCESS", "동아리 목록 조회가 완료되었습니다."),
     CLUB_DETAIL_GET_SUCCESS(HttpStatus.OK, "CLUB_DETAIL_GET_SUCCESS", "동아리 상세 조회가 완료되었습니다."),
-    CLUB_APPROVE_SUCCESS(HttpStatus.OK, "CLUB_APPROVE_SUCCESS", "동아리 승인이 완료되었습니다."),
-    CLUB_REJECT_SUCCESS(HttpStatus.OK, "CLUB_REJECT_SUCCESS", "동아리 반려가 완료되었습니다."),
     MY_CLUB_LIST_GET_SUCCESS(HttpStatus.OK, "MY_CLUB_LIST_GET_SUCCESS", "내 동아리 목록 조회가 완료되었습니다."),
-    CLUB_PENDING_LIST_GET_SUCCESS(HttpStatus.OK, "CLUB_PENDING_LIST_GET_SUCCESS", "승인 대기 동아리 목록을 조회했습니다."),
+    CLUB_UPDATE_SUCCESS(HttpStatus.OK, "CLUB_UPDATE_SUCCESS", "동아리 정보가 수정되었습니다."),
 
     // ClubMember
     CLUB_MEMBER_LIST_GET_SUCCESS(HttpStatus.OK, "CLUB_MEMBER_LIST_GET_SUCCESS", "동아리 멤버 목록 조회가 완료되었습니다."),
-    CLUB_MEMBER_REGISTER_SUCCESS(HttpStatus.OK, "CLUB_MEMBER_REGISTER_SUCCESS", "동아리 멤버 등록이 완료되었습니다."),
+    CLUB_JOIN_REQUEST_SUCCESS(HttpStatus.OK, "CLUB_JOIN_REQUEST_SUCCESS", "동아리 가입 신청이 완료되었습니다."),
+    CLUB_JOIN_CANCEL_SUCCESS(HttpStatus.OK, "CLUB_JOIN_CANCEL_SUCCESS", "동아리 가입 신청이 취소되었습니다."),
+    MY_CLUB_JOIN_LIST_GET_SUCCESS(HttpStatus.OK, "MY_CLUB_JOIN_LIST_GET_SUCCESS", "내 동아리 가입 신청 목록 조회가 완료되었습니다."),
+    CLUB_JOIN_LIST_GET_SUCCESS(HttpStatus.OK, "CLUB_JOIN_LIST_GET_SUCCESS", "동아리 가입 신청자 목록 조회가 완료되었습니다."),
+    CLUB_JOIN_APPROVE_SUCCESS(HttpStatus.OK, "CLUB_JOIN_APPROVE_SUCCESS", "동아리 가입 신청이 승인되었습니다."),
+    CLUB_JOIN_REJECT_SUCCESS(HttpStatus.OK, "CLUB_JOIN_REJECT_SUCCESS", "동아리 가입 신청이 거절되었습니다."),
+    CLUB_MEMBER_ROLE_UPDATE_SUCCESS(HttpStatus.OK, "CLUB_MEMBER_ROLE_UPDATE_SUCCESS", "동아리 멤버 역할이 변경되었습니다."),
+    CLUB_PRESIDENT_TRANSFER_SUCCESS(HttpStatus.OK, "CLUB_PRESIDENT_TRANSFER_SUCCESS", "동아리 대표 권한이 이전되었습니다."),
+    CLUB_MEMBER_REMOVE_SUCCESS(HttpStatus.OK, "CLUB_MEMBER_REMOVE_SUCCESS", "동아리 멤버가 내보내기 처리되었습니다."),
 
     //Main
     MAIN_GET_SUCCESS(HttpStatus.OK, "MAIN_GET_SUCCESS", "메인페이지 조회가 완료되었습니다."),
