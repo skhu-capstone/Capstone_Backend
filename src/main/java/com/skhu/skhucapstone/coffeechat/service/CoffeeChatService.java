@@ -118,7 +118,9 @@ public class CoffeeChatService {
 
     // 프로필 이미지 업로드
     @Transactional
-    public String uploadProfileImage(Long userId, MultipartFile file) {
+    public String uploadProfileImage(Long loginUserId, Long userId, MultipartFile file) {
+        validateOwner(loginUserId, userId);
+
         CoffeeChatProfile profile = coffeeChatProfileRepository.findByUserUserId(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.COFFEECHAT_PROFILE_NOT_FOUND));
 
@@ -132,6 +134,30 @@ public class CoffeeChatService {
         profile.updateProfileImage(imageUrl);
 
         return imageUrl;
+    }
+
+    // 프로필 이미지 삭제 (기본 이미지 상태로 되돌린다)
+    @Transactional
+    public void deleteProfileImage(Long loginUserId, Long userId) {
+        validateOwner(loginUserId, userId);
+
+        CoffeeChatProfile profile = coffeeChatProfileRepository.findByUserUserId(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.COFFEECHAT_PROFILE_NOT_FOUND));
+
+        // 이미 이미지가 없으면 아무것도 하지 않는다.
+        if (profile.getProfileImageUrl() == null) {
+            return;
+        }
+
+        imageUploadService.delete(profile.getProfileImageUrl());
+        profile.updateProfileImage(null);
+    }
+
+    // 프로필 이미지는 본인만 변경·삭제할 수 있다.
+    private void validateOwner(Long loginUserId, Long targetUserId) {
+        if (loginUserId == null || !loginUserId.equals(targetUserId)) {
+            throw new CustomException(ErrorCode.COFFEECHAT_PROFILE_IMAGE_FORBIDDEN);
+        }
     }
 
     // 유저의 동아리 목록 조회 (동아리명 / 역할)

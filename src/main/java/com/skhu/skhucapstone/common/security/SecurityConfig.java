@@ -35,6 +35,19 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/main").permitAll()
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/chat/**",
+                                "/api/users/me/**"
+                        ).authenticated()
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/coffeechat/profiles",
+                                "/api/coffeechat/profiles/**",
+                                "/api/posts",
+                                "/api/posts/**",
+                                "/api/clubs/**",
+                                "/api/club-collaborations/**",
+                                "/api/project-recruitments/**"
+                        ).permitAll()
                         .requestMatchers(
                                 "/api/auth/google/login",
                                 "/uploads/**",

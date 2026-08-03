@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -40,11 +41,21 @@ public class CoffeeChatController {
     }
 
     @PostMapping(value = "/profiles/{userId}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Operation(summary = "커피챗 프로필 이미지 업로드", description = "사용자의 커피챗 프로필 이미지를 업로드합니다.")
+    @Operation(summary = "커피챗 프로필 이미지 업로드", description = "본인의 커피챗 프로필 이미지를 업로드합니다. 다른 사용자의 이미지는 변경할 수 없습니다.")
     public ResponseEntity<ApiResponse<String>> uploadProfileImage(
+            @AuthenticationPrincipal Long loginUserId,
             @PathVariable Long userId,
             @RequestPart MultipartFile file) {
-        String imageUrl = coffeeChatService.uploadProfileImage(userId, file);
+        String imageUrl = coffeeChatService.uploadProfileImage(loginUserId, userId, file);
         return ResponseEntity.ok(ApiResponse.success(SuccessCode.COFFEECHAT_PROFILE_IMAGE_UPLOAD_SUCCESS, imageUrl));
+    }
+
+    @DeleteMapping("/profiles/{userId}/image")
+    @Operation(summary = "커피챗 프로필 이미지 삭제", description = "본인의 커피챗 프로필 이미지를 삭제합니다. 이미지가 없어도 성공으로 처리됩니다.")
+    public ResponseEntity<ApiResponse<Void>> deleteProfileImage(
+            @AuthenticationPrincipal Long loginUserId,
+            @PathVariable Long userId) {
+        coffeeChatService.deleteProfileImage(loginUserId, userId);
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.COFFEECHAT_PROFILE_IMAGE_DELETE_SUCCESS, null));
     }
 }
