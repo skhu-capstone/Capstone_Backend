@@ -49,6 +49,11 @@ public enum SuccessCode {
     CLUB_DETAIL_GET_SUCCESS(HttpStatus.OK, "CLUB_DETAIL_GET_SUCCESS", "동아리 상세 조회가 완료되었습니다."),
     MY_CLUB_LIST_GET_SUCCESS(HttpStatus.OK, "MY_CLUB_LIST_GET_SUCCESS", "내 동아리 목록 조회가 완료되었습니다."),
     CLUB_UPDATE_SUCCESS(HttpStatus.OK, "CLUB_UPDATE_SUCCESS", "동아리 정보가 수정되었습니다."),
+    CLUB_EVENT_CREATE_SUCCESS(HttpStatus.OK, "CLUB_EVENT_CREATE_SUCCESS", "동아리 일정이 생성되었습니다."),
+    CLUB_EVENT_LIST_GET_SUCCESS(HttpStatus.OK, "CLUB_EVENT_LIST_GET_SUCCESS", "동아리 일정 목록 조회가 완료되었습니다."),
+    CLUB_EVENT_DETAIL_GET_SUCCESS(HttpStatus.OK, "CLUB_EVENT_DETAIL_GET_SUCCESS", "동아리 일정 상세 조회가 완료되었습니다."),
+    CLUB_EVENT_UPDATE_SUCCESS(HttpStatus.OK, "CLUB_EVENT_UPDATE_SUCCESS", "동아리 일정이 수정되었습니다."),
+    CLUB_EVENT_DELETE_SUCCESS(HttpStatus.OK, "CLUB_EVENT_DELETE_SUCCESS", "동아리 일정이 삭제되었습니다."),
 
     // ClubMember
     CLUB_MEMBER_LIST_GET_SUCCESS(HttpStatus.OK, "CLUB_MEMBER_LIST_GET_SUCCESS", "동아리 멤버 목록 조회가 완료되었습니다."),
