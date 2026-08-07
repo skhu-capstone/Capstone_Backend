@@ -11,7 +11,6 @@ import com.skhu.skhucapstone.clubmember.domain.ClubJoinStatus;
 import com.skhu.skhucapstone.clubmember.domain.ClubMember;
 import com.skhu.skhucapstone.clubmember.domain.ClubRole;
 import com.skhu.skhucapstone.clubmember.domain.repository.ClubMemberRepository;
-import com.skhu.skhucapstone.coffeechat.repository.CoffeeChatProfileRepository;
 import com.skhu.skhucapstone.common.exception.CustomException;
 import com.skhu.skhucapstone.common.exception.ErrorCode;
 import com.skhu.skhucapstone.user.entity.User;
@@ -32,7 +31,6 @@ public class ClubMemberService {
     private final ClubRepository clubRepository;
     private final ClubMemberRepository clubMemberRepository;
     private final UserRepository userRepository;
-    private final CoffeeChatProfileRepository coffeeChatProfileRepository;
 
     @Transactional
     public ClubJoinResponse requestJoin(
@@ -120,24 +118,12 @@ public class ClubMemberService {
                         ClubJoinStatus.JOINED
                 )
                 .stream()
-                .map(clubMember -> {
-
-                    Long userId = clubMember.getUser().getUserId();
-
-                    String coffeeChatProfileImageUrl =
-                            coffeeChatProfileRepository
-                                    .findByUserUserId(userId)
-                                    .map(profile -> profile.getProfileImageUrl())
-                                    .orElse(null);
-
-                    return ClubMemberListResponse.builder()
-                            .userId(userId)
-                            .name(clubMember.getUser().getName())
-                            .profileImage(clubMember.getUser().getProfileImage())
-                            .coffeeChatProfileImageUrl(coffeeChatProfileImageUrl)
-                            .role(clubMember.getRole())
-                            .build();
-                })
+                .map(clubMember -> ClubMemberListResponse.builder()
+                        .userId(clubMember.getUser().getUserId())
+                        .name(clubMember.getUser().getName())
+                        .profileImage(clubMember.getUser().getProfileImage())
+                        .role(clubMember.getRole())
+                        .build())
                 .toList();
     }
 

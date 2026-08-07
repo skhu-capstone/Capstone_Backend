@@ -14,7 +14,5 @@ public class ClubMemberListResponse {
 
     private String profileImage;
 
-    private String coffeeChatProfileImageUrl;
-
     private ClubRole role;
 }
