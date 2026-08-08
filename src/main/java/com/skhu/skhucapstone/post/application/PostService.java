@@ -5,6 +5,10 @@ import com.skhu.skhucapstone.club.domain.repository.ClubRepository;
 import com.skhu.skhucapstone.clubmember.domain.ClubMember;
 import com.skhu.skhucapstone.clubmember.domain.ClubRole;
 import com.skhu.skhucapstone.clubmember.domain.repository.ClubMemberRepository;
+import com.skhu.skhucapstone.coffeechat.repository.CoffeeChatProfileRepository;
+import com.skhu.skhucapstone.comment.api.dto.response.CommentResponse;
+import com.skhu.skhucapstone.comment.domain.Comment;
+import com.skhu.skhucapstone.comment.domain.repository.CommentRepository;
 import com.skhu.skhucapstone.common.exception.CustomException;
 import com.skhu.skhucapstone.common.exception.ErrorCode;
 import com.skhu.skhucapstone.common.file.ImageUploadService;
@@ -43,6 +47,8 @@ public class PostService {
     private final ClubMemberRepository clubMemberRepository;
     private final ImageUploadService imageUploadService;
     private final LikesRepository likesRepository;
+    private final CoffeeChatProfileRepository coffeeChatProfileRepository;
+    private final CommentRepository commentRepository;
 
     @Transactional
     public PostResponse createPost(
@@ -302,6 +308,18 @@ public class PostService {
                         userId
                 );
 
+        String writerCoffeeChatProfileImageUrl =
+                coffeeChatProfileRepository
+                        .findByUserUserId(post.getUser().getUserId())
+                        .map(profile -> profile.getProfileImageUrl())
+                        .orElse(null);
+
+        List<CommentResponse> comments =
+                commentRepository.findByPostOrderByCreatedAtAsc(post)
+                        .stream()
+                        .map(this::toCommentResponse)
+                        .toList();
+
         return PostResponse.builder()
                 .clubName(post.getClub().getClubName())
                 .postId(post.getPostId())
@@ -310,9 +328,20 @@ public class PostService {
                 .imageUrls(imageUrls)
                 .postType(post.getPostType())
                 .writerName(post.getUser().getName())
+                .writerCoffeeChatProfileImageUrl(writerCoffeeChatProfileImageUrl)
                 .likeCount(likeCount)
                 .liked(liked)
+                .comments(comments)
                 .createdAt(post.getCreatedAt())
+                .build();
+    }
+
+    private CommentResponse toCommentResponse(Comment comment) {
+        return CommentResponse.builder()
+                .commentId(comment.getCommentId())
+                .content(comment.getContent())
+                .writerName(comment.getUser().getName())
+                .createdAt(comment.getCreatedAt())
                 .build();
     }
 

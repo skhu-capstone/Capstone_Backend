@@ -1,5 +1,6 @@
 package com.skhu.skhucapstone.post.api.dto.response;
 
+import com.skhu.skhucapstone.comment.api.dto.response.CommentResponse;
 import com.skhu.skhucapstone.post.domain.PostType;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,9 +26,13 @@ public class PostResponse {
 
     private String writerName;
 
+    private String writerCoffeeChatProfileImageUrl;
+
     private long likeCount;
 
     private boolean liked;
+
+    private List<CommentResponse> comments;
 
     private LocalDateTime createdAt;
 }
