@@ -5,6 +5,10 @@ import com.skhu.skhucapstone.club.domain.repository.ClubRepository;
 import com.skhu.skhucapstone.clubmember.domain.ClubMember;
 import com.skhu.skhucapstone.clubmember.domain.ClubRole;
 import com.skhu.skhucapstone.clubmember.domain.repository.ClubMemberRepository;
+import com.skhu.skhucapstone.coffeechat.repository.CoffeeChatProfileRepository;
+import com.skhu.skhucapstone.comment.api.dto.response.CommentResponse;
+import com.skhu.skhucapstone.comment.domain.Comment;
+import com.skhu.skhucapstone.comment.domain.repository.CommentRepository;
 import com.skhu.skhucapstone.common.exception.CustomException;
 import com.skhu.skhucapstone.common.exception.ErrorCode;
 import com.skhu.skhucapstone.common.file.ImageUploadService;
@@ -18,7 +22,6 @@ import com.skhu.skhucapstone.post.domain.PostImage;
 import com.skhu.skhucapstone.post.domain.repository.PostImageRepository;
 import com.skhu.skhucapstone.post.domain.repository.PostRepository;
 import com.skhu.skhucapstone.user.entity.User;
-import com.skhu.skhucapstone.coffeechat.repository.CoffeeChatProfileRepository;
 import com.skhu.skhucapstone.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -45,6 +48,7 @@ public class PostService {
     private final ImageUploadService imageUploadService;
     private final LikesRepository likesRepository;
     private final CoffeeChatProfileRepository coffeeChatProfileRepository;
+    private final CommentRepository commentRepository;
 
     @Transactional
     public PostResponse createPost(
@@ -310,6 +314,12 @@ public class PostService {
                         .map(profile -> profile.getProfileImageUrl())
                         .orElse(null);
 
+        List<CommentResponse> comments =
+                commentRepository.findByPostOrderByCreatedAtAsc(post)
+                        .stream()
+                        .map(this::toCommentResponse)
+                        .toList();
+
         return PostResponse.builder()
                 .clubName(post.getClub().getClubName())
                 .postId(post.getPostId())
@@ -321,7 +331,17 @@ public class PostService {
                 .writerCoffeeChatProfileImageUrl(writerCoffeeChatProfileImageUrl)
                 .likeCount(likeCount)
                 .liked(liked)
+                .comments(comments)
                 .createdAt(post.getCreatedAt())
+                .build();
+    }
+
+    private CommentResponse toCommentResponse(Comment comment) {
+        return CommentResponse.builder()
+                .commentId(comment.getCommentId())
+                .content(comment.getContent())
+                .writerName(comment.getUser().getName())
+                .createdAt(comment.getCreatedAt())
                 .build();
     }
 
