@@ -18,6 +18,7 @@ import com.skhu.skhucapstone.post.domain.PostImage;
 import com.skhu.skhucapstone.post.domain.repository.PostImageRepository;
 import com.skhu.skhucapstone.post.domain.repository.PostRepository;
 import com.skhu.skhucapstone.user.entity.User;
+import com.skhu.skhucapstone.coffeechat.repository.CoffeeChatProfileRepository;
 import com.skhu.skhucapstone.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -43,6 +44,7 @@ public class PostService {
     private final ClubMemberRepository clubMemberRepository;
     private final ImageUploadService imageUploadService;
     private final LikesRepository likesRepository;
+    private final CoffeeChatProfileRepository coffeeChatProfileRepository;
 
     @Transactional
     public PostResponse createPost(
@@ -302,6 +304,12 @@ public class PostService {
                         userId
                 );
 
+        String writerCoffeeChatProfileImageUrl =
+                coffeeChatProfileRepository
+                        .findByUserUserId(post.getUser().getUserId())
+                        .map(profile -> profile.getProfileImageUrl())
+                        .orElse(null);
+
         return PostResponse.builder()
                 .clubName(post.getClub().getClubName())
                 .postId(post.getPostId())
@@ -310,6 +318,7 @@ public class PostService {
                 .imageUrls(imageUrls)
                 .postType(post.getPostType())
                 .writerName(post.getUser().getName())
+                .writerCoffeeChatProfileImageUrl(writerCoffeeChatProfileImageUrl)
                 .likeCount(likeCount)
                 .liked(liked)
                 .createdAt(post.getCreatedAt())

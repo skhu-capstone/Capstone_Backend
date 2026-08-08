@@ -14,6 +14,8 @@ public class ClubFeedRes {
 
     private String writerName;
 
+    private String writerCoffeeChatProfileImageUrl;
+
     private String clubName;
 
     private LocalDateTime createdAt;

@@ -25,6 +25,8 @@ public class PostResponse {
 
     private String writerName;
 
+    private String writerCoffeeChatProfileImageUrl;
+
     private long likeCount;
 
     private boolean liked;

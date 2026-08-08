@@ -119,6 +119,9 @@ public class MainService {
                 .clubName(post.getClubName())
                 .postId(post.getPostId())
                 .writerName(post.getWriterName())
+                .writerCoffeeChatProfileImageUrl(
+                        post.getWriterCoffeeChatProfileImageUrl()
+                )
                 .createdAt(post.getCreatedAt())
                 .imageUrls(post.getImageUrls())
                 .content(post.getContent())
